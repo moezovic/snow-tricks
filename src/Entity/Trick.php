@@ -39,13 +39,13 @@ class Trick
     private $cover;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comments", mappedBy="trick_id")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
      */
-    private $comments_id;
+    private $comments;
 
     public function __construct()
     {
-        $this->comments_id = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -102,33 +102,34 @@ class Trick
     }
 
     /**
-     * @return Collection|Comments[]
+     * @return Collection|Comment[]
      */
-    public function getCommentsId(): Collection
+    public function getComments(): Collection
     {
-        return $this->comments_id;
+        return $this->comments;
     }
 
-    public function addCommentsId(Comments $commentsId): self
+    public function addComment(Comment $comment): self
     {
-        if (!$this->comments_id->contains($commentsId)) {
-            $this->comments_id[] = $commentsId;
-            $commentsId->setTrickId($this);
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setTrick($this);
         }
 
         return $this;
     }
 
-    public function removeCommentsId(Comments $commentsId): self
+    public function removeComment(Comment $comment): self
     {
-        if ($this->comments_id->contains($commentsId)) {
-            $this->comments_id->removeElement($commentsId);
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
             // set the owning side to null (unless already changed)
-            if ($commentsId->getTrickId() === $this) {
-                $commentsId->setTrickId(null);
+            if ($comment->getTrick() === $this) {
+                $comment->setTrick(null);
             }
         }
 
         return $this;
     }
+
 }

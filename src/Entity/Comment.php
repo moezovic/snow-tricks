@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentsRepository")
  */
-class Comments
+class Comment
 {
     /**
      * @ORM\Id()
@@ -42,10 +42,10 @@ class Comments
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="comments_id")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $trick_id;
+    private $trick;
 
     public function getId(): ?int
     {
@@ -112,15 +112,16 @@ class Comments
         return $this;
     }
 
-    public function getTrickId(): ?Trick
+    public function getTrick(): ?Trick
     {
-        return $this->trick_id;
+        return $this->trick;
     }
 
-    public function setTrickId(?Trick $trick_id): self
+    public function setTrick(?Trick $trick): self
     {
-        $this->trick_id = $trick_id;
+        $this->trick = $trick;
 
         return $this;
     }
+
 }
