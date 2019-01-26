@@ -13,6 +13,12 @@ security:
         main:
             pattern: ^/
             provider: our_db_provider
+            form_login:
+                login_path: login
+                check_path: login
+            logout:
+                path: /logout
+                target: /
 
             # activate different ways to authenticate
 
@@ -26,4 +32,4 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/member, roles: ROLE_USER }
