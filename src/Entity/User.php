@@ -4,9 +4,12 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields="email")
  */
 class User implements UserInterface, \Serializable 
 {
@@ -18,17 +21,42 @@ class User implements UserInterface, \Serializable
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=100, unique=true)
+     * @Assert\NotBlank(
+            message = "La valeur ne peut pas être vide."
+     *)
+     * @Assert\Email(
+     *     message = "La valeur de votre émail '{{ value }}' n'est pas correcte.",
+     *     checkMX = true
+     * )
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(
+            message = "La valeur ne peut pas être vide."
+     *)
+     * @Assert\Length(
+     *      min = 8,
+     *      max = 50,
+     *      minMessage = "Votre mot de passe doit contenir au moins 8 caractéres",
+     *      maxMessage = "Votre mot de passe doit contenir au moins 50 caractéres"
+     * )
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=50, unique=true)
+     * @Assert\NotBlank(
+            message = "La valeur ne peut pas être vide."
+     *)
+     * @Assert\Length(
+     *      min = 8,
+     *      max = 50,
+     *      minMessage = "Votre nom d'utilisateur doit contenir au moins 8 caractéres",
+     *      maxMessage = "Votre nom d'utilisateur doit contenir au moins 50 caractéres"
+     * )
      */
     private $username;
 
