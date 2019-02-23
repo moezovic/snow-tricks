@@ -41,9 +41,9 @@
 						
 						<!-- Connexion & deconnexion -->
 
-					{% if is_granted('ROLE_ADMIN') %}
+					{% if is_granted('ROLE_USER') %}
 						<li class="nav-item">
-    						<a class="nav-link" href="{{path('loggout')}}">Deconnexion</a>
+    						<a class="nav-link" href="{{path('logout')}}">Deconnexion</a>
     				</li>
     					{% else %}
     				<li class="nav-item">

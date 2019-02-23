@@ -49,14 +49,10 @@ class User implements UserInterface, \Serializable
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=50, unique=true)
+     * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(
             message = "La valeur ne peut pas être vide."
      *)
-     * @Assert\Regex(
-     *     pattern     = "/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]$/"
-     *     message     = "Votre mot de passe doit être composer de chiffre, de lettres et de caractéres spéciaux."
-     * )
      * @Assert\Length(
      *      min = 8,
      *      max = 50,
@@ -107,7 +103,7 @@ class User implements UserInterface, \Serializable
 
     public function getUsername(): ?string
     {
-        return $this->username;
+        return $this->email;
     }
 
     public function setUsername(string $username): self
