@@ -53,6 +53,10 @@ class User implements UserInterface, \Serializable
      * @Assert\NotBlank(
             message = "La valeur ne peut pas être vide."
      *)
+     * @Assert\Regex(
+     *     pattern     = "/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]$/"
+     *     message     = "Votre mot de passe doit être composer de chiffre, de lettres et de caractéres spéciaux."
+     * )
      * @Assert\Length(
      *      min = 8,
      *      max = 50,
