@@ -3,39 +3,28 @@
 {% block title %}Trick index{% endblock %}
 
 {% block body %}
-    <h1>Trick index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>DateCreation</th>
-                <th>Cover</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for trick in tricks %}
-            <tr>
-                <td>{{ trick.id }}</td>
-                <td>{{ trick.name }}</td>
-                <td>{{ trick.description }}</td>
-                <td>{{ trick.dateCreation ? trick.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ trick.cover }}</td>
-                <td>
-                    <a href="{{ path('trick_show', {'id': trick.id}) }}">show</a>
-                    <a href="{{ path('trick_edit', {'id': trick.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <a href="{{ path('trick_new') }}">Create new</a>
+
+<div class="container m-4">
+        <h1>Page d'accueil</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="row m-4">
+                {% for trick in tricks %}
+                    <div class="col-3">
+                        <div class="card">
+                         <img src="..." class="card-img-top" alt="...">
+                          <div class="card-body">
+                           <h5 class="card-title">{{trick.name}}</h5>
+                           <p class="card-text">{{trick.description}}</p>
+                            <a href="{{path('trick_show', {id : trick.id})}}" class="btn btn-primary">Details</a>
+                          </div>
+                        </div>
+                    </div>
+                {% endfor %}
+        </div>
+    </div>
+
+    <a href="{{ path('trick_new') }}" class="btn btn-outline-secondary">Create new</a>
 {% endblock %}

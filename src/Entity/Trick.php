@@ -46,6 +46,7 @@ class Trick
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->dateCreation = new \DateTime();
     }
 
     public function getId(): ?int

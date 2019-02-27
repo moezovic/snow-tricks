@@ -14,7 +14,6 @@ class TrickType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('dateCreation')
             ->add('cover')
         ;
     }
