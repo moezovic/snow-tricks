@@ -34,13 +34,6 @@ class User implements UserInterface, \Serializable {
     private $email;
 
     /**
-     * @Assert\NotBlank()
-     * @Assert\Length(max=250)
-     */
-    private $plainPassword;
-
-    /**
-     * @ORM\Column(type="string", length=64)
      * @Assert\NotBlank(
      *       message = "La valeur ne peut pas être vide."
      *)
@@ -50,6 +43,11 @@ class User implements UserInterface, \Serializable {
      *      minMessage = "Votre mot de passe doit contenir au moins 8 caractéres",
      *      maxMessage = "Votre mot de passe doit contenir au moins 50 caractéres"
      * )
+     */
+    private $plainPassword;
+
+    /**
+     * @ORM\Column(type="string", length=64)
      */
     private $password;
 

@@ -2,31 +2,43 @@
 
 {% block title %}Trick{% endblock %}
 
-{% block body %}
- <div class="container">
-    <h1 class="m-4">Figure en détail</h1>
+{% block body %} 
+{% block cover %}{% endblock %}
 
-    <table class="table table-striped">
-        <tbody>
 
-            <tr>
-                <th>Name</th>
-                <td>{{ trick.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ trick.description }}</td>
-            </tr>
-            <tr>
-                <th>DateCreation</th>
-                <td>{{ trick.dateCreation ? trick.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Cover</th>
-                <td>{{ trick.cover }}</td>
-            </tr>
-        </tbody>
-    </table>
+<!-- Jumbotron -->
+<div class="card card-image" style="background-image: url(https://mdbootstrap.com/img/Photos/Others/forest2.jpg);background-repeat: no-repeat; background-size: cover; background-position: center">
+  <div class="text-white text-center rgba-stylish-strong py-5 px-4">
+    <div class="py-5">
+
+      <!-- Content -->
+      <h2 class="h2 orange-text"><i class="fas fa-snowboarding"></i></h2>
+      <h1 class="card-title h2 my-4 py-2">{{ trick.name }}</h1>
+
+    </div>
+  </div>
+</div>
+<!-- Jumbotron -->
+
+
+<!-- Card -->
+<div class="card card-cascade wider reverse">
+
+  <!-- Card content -->
+  <div class="card-body card-body-cascade text-center">
+
+    <!-- Title -->
+    <h4 class="card-title"><strong>Détails</strong></h4>
+    <!-- Subtitle -->
+    <h6 class="font-weight-bold indigo-text py-2">Description</h6>
+    <!-- Text -->
+    <p class="card-text">{{trick.description}}</p>
+
+  </div>
+
+</div>
+<!-- Card -->
+
 
     <a href="{{ path('trick_index')}}"  class="btn btn-outline-info">back to list</a>
 

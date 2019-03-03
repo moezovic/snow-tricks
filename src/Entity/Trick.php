@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
  */
@@ -35,7 +37,15 @@ class Trick
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Ajouter une image")
+     * @Assert\Image(
+     *     minWidth = 200,
+     *     maxWidth = 1000,
+     *     minHeight = 200,
+     *     maxHeight = 1000
+     * )
      */
+
     private $cover;
 
     /**
@@ -90,12 +100,12 @@ class Trick
         return $this;
     }
 
-    public function getCover(): ?string
+    public function getCover()
     {
         return $this->cover;
     }
 
-    public function setCover(string $cover): self
+    public function setCover($cover): self
     {
         $this->cover = $cover;
 

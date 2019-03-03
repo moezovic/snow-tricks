@@ -4,27 +4,28 @@
 
 {% block body %}
 
+<section>
 
-
-<div class="container m-4">
-        <h1>Page d'accueil</h1>
-    </div>
-    <div class="container-fluid">
-        <div class="row m-4">
-                {% for trick in tricks %}
-                    <div class="col-3">
-                        <div class="card">
-                         <img src="..." class="card-img-top" alt="...">
-                          <div class="card-body">
-                           <h5 class="card-title">{{trick.name}}</h5>
-                           <p class="card-text">{{trick.description}}</p>
-                            <a href="{{path('trick_show', {id : trick.id})}}" class="btn btn-primary">Details</a>
-                          </div>
-                        </div>
-                    </div>
-                {% endfor %}
+  <div class="container-fluid">
+    <div class="row m-4">
+      {% for trick in tricks %}
+        <div class="col-xl-2 col-lg-3 col-md-4">
+          <div class="card">
+           <img src="{{ asset('uploads/images/' ~ trick.cover) }}" class="card-img-top img-fluid" alt="...">
+            <div class="card-body">
+              <a class="card-title" href="{{path('trick_show', {id : trick.id})}}">{{trick.name}} </a>
+              <a href="{{path('trick_edit',{id: trick.id})}}">
+              <i class="fas fa-pencil-alt"></i>
+              </a>
+              <a href="{{path('trick_delete',{id: trick.id})}}">
+              <i class="far fa-trash-alt"></i>
+              </a>              
+            </div>
+          </div>
         </div>
+      {% endfor %}
     </div>
+  </div>
+</section>
 
-    <a href="{{ path('trick_new') }}" class="btn btn-outline-secondary">Create new</a>
 {% endblock %}
