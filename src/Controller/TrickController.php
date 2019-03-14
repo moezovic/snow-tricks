@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 
 class TrickController extends AbstractController
@@ -20,6 +21,7 @@ class TrickController extends AbstractController
      */
     public function index(TrickRepository $trickRepository): Response
     {
+     
         return $this->render('trick/index.html.twig', [
             'tricks' => $trickRepository->findAll(),
             'fixed_menu'=> 'enabled'
@@ -34,8 +36,7 @@ class TrickController extends AbstractController
         $trick = new Trick();
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
-        dump($trick);
-        die;
+
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -72,13 +73,22 @@ class TrickController extends AbstractController
         ]);
     }
 
+
     /**
      * @Route("/{id}", name="trick_show", methods={"GET"})
      */
     public function show(Trick $trick): Response
     {
-        return $this->render('trick/show.html.twig', ['trick' => $trick]);
+         $niveau = Trick::NIVEAU[$trick->getNiveau()];
+         $trick_group = Trick::NIVEAU[$trick->getTrickGroup()];
+
+        return $this->render('trick/show.html.twig', [
+          'trick' => $trick,
+          'niveau' => $niveau,
+          'trick_group' => $trick_group
+        ]);
     }
+
 
     /**
      * @Route("/{id}/edit", name="trick_edit", methods={"GET","POST"})
@@ -120,6 +130,7 @@ class TrickController extends AbstractController
         }
 
         return $this->render('trick/edit.html.twig', [
+
             'trick' => $trick,
             'form' => $form->createView(),
         ]);
@@ -137,6 +148,15 @@ class TrickController extends AbstractController
         }
 
         return $this->redirectToRoute('trick_index');
+    }
+
+    /**
+     * @Route("/ajax/{first}", name="trick_ajax", methods={"GET"})
+     */
+    public function ajax(TrickRepository $trickRepository, $first){
+        return new JsonResponse($trickRepository->loadXtricks($first,1));
+        
+        
     }
 
     /**

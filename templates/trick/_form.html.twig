@@ -1,4 +1,8 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+      {{form_row(form.cover)}}
+     {{ form_widget(form) }} 
+   
+      <!-- <img src="{{asset('uploads/images/'~trick.cover)}}"> -->
+     
     <button class="btn btn-primary">{{ button_label|default('Valider') }}</button>
 {{ form_end(form) }}

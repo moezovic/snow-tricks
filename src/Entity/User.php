@@ -27,8 +27,7 @@ class User implements UserInterface, \Serializable {
      * message = "La valeur ne peut pas être vide."
      *)
      * @Assert\Email(
-     *     message = "La valeur de votre émail '{{ value }}' n'est pas correcte.",
-     *     checkMX = true
+     *     message = "La valeur de votre émail '{{ value }}' n'est pas correcte."
      *)
      */
     private $email;

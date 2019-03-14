@@ -13,6 +13,22 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Trick
 {
+
+    const NIVEAU = [
+      0 => "",
+      1 => "Facile",
+      2 => "Moyen",
+      3 => "Difficile",
+      4 => "Très difficile"
+    ];
+
+    const TRICK_GROUP = [
+      0 => "",
+      1 => "Les grabs",
+      2 => "Les rotations",
+      3 => "Les flips"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -52,6 +68,29 @@ class Trick
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
      */
     private $comments;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 4,
+     *      minMessage = "Veuillez choisir un niveau de difficulté valide.",
+     *      maxMessage = "Veuillez choisir un niveau de difficulté valide.",
+     *      
+     * )
+     */
+    private $niveau;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 3,
+     *      minMessage = "Veuillez choisir un type de figure valide.",
+     *      maxMessage = "Veuillez choisir un type de figure valide."
+     * )
+     */
+    private $trick_group;
 
     public function __construct()
     {
@@ -139,6 +178,30 @@ class Trick
                 $comment->setTrick(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNiveau()
+    {
+        return $this->niveau;
+    }
+
+    public function setNiveau($niveau): self
+    {
+        $this->niveau = $niveau;
+
+        return $this;
+    }
+
+    public function getTrickGroup()
+    {
+        return $this->trick_group;
+    }
+
+    public function setTrickGroup($trick_group): self
+    {
+        $this->trick_group = $trick_group;
 
         return $this;
     }
