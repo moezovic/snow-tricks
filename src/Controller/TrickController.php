@@ -21,9 +21,10 @@ class TrickController extends AbstractController
      */
     public function index(TrickRepository $trickRepository): Response
     {
-     
+        $tricks = $trickRepository->findAll();
+
         return $this->render('trick/index.html.twig', [
-            'tricks' => $trickRepository->findAll(),
+          'tricks' => $tricks,
             'fixed_menu'=> 'enabled'
         ]);
     }
@@ -43,6 +44,7 @@ class TrickController extends AbstractController
             // $file stores the uploaded file
 
             $file = $form->get('cover')->getData();
+            $files = $form->get('images')->getData();
             $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
             // Move the file to the directory where images are stored
             try {
@@ -57,6 +59,21 @@ class TrickController extends AbstractController
             // updates the 'cover' property to store the image file name
             // instead of its contents
             $trick->setCover($fileName);
+
+            foreach ($files as $file) {
+               $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+                // Move the file to the directory where images are stored
+                try {
+                    $file->move(
+                        $this->getParameter('image_directory'),
+                        $fileName
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                $trick->addImage($fileName);
+            }
 
 
 
@@ -151,11 +168,15 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/{first}", name="trick_ajax", methods={"GET"})
+     * @Route("/ajax/", name="trick_ajax", methods={"POST"})
      */
-    public function ajax(TrickRepository $trickRepository, $first){
-        return new JsonResponse($trickRepository->loadXtricks($first,1));
-        
+    public function ajax(TrickRepository $trickRepository, Request $request){
+      
+        return $this->render('trick/ajax.html.twig', [
+
+            'tricks' => $trickRepository->loadXtricks($request->request->get('first'), 3),
+            
+        ]);
         
     }
 

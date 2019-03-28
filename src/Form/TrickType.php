@@ -16,9 +16,16 @@ class TrickType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('cover', FileType::class, ['label' => 'Image'])
             ->add('niveau', ChoiceType::class, ['choices'=>array_flip(Trick::NIVEAU), 'label' => 'Niveau de difficulté'])
             ->add('trick_group' , ChoiceType::class, ['choices'=>array_flip(Trick::TRICK_GROUP), 'label' => 'Type de figure'])
+            ->add('cover', FileType::class, [
+              'label' => 'Image couverture',
+            ])
+              ->add('images', FileType::class, [
+              'label' => 'Image',
+              'multiple' => true
+            ])
+            
         ;
     }
 

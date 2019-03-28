@@ -1,8 +1,21 @@
 {{ form_start(form) }}
-      {{form_row(form.cover)}}
-     {{ form_widget(form) }} 
+  
+     <div class="container">
+        
+        <div >{{form_row(form.name)}}</div>
+        
+        <div>{{form_row(form.description)}}</div>   
+
+        <div class="row">
+          <div class="col-md-3">{{form_row(form.niveau)}}</div>
+          <div class="col-md-3">{{form_row(form.trick_group)}}</div>
+          <div class="col-md-6">{{form_row(form.cover)}}</div>
+        </div>
+        <div class="row">
+          <img src="{{ asset('uploads/images/' ~ trick.cover ) }}">
+        </div>
+      </div> 
    
-      <!-- <img src="{{asset('uploads/images/'~trick.cover)}}"> -->
      
     <button class="btn btn-primary">{{ button_label|default('Valider') }}</button>
 {{ form_end(form) }}

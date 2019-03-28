@@ -23,17 +23,17 @@ class TrickRepository extends ServiceEntityRepository
     // //  * @return Trick[] Returns an array of Trick objects
     // //  */
     // /*
-    // public function loadXtricks($firstValue, $maxValue)
-    // {
-    //     return $this->createQueryBuilder('t')
-    //         ->select("t.id, t.cover")
-    //         ->orderBy('t.id', 'DESC')
-    //         ->setMaxResults($maxValue)
-    //         ->setFirstResult($firstValue)
-    //         ->getQuery()
-    //         ->getResult()
-    //     ;
-    // }
+    public function loadXtricks($firstValue, $maxValue)
+    {
+        return $this->createQueryBuilder('t')
+            // ->select("t.id, t.cover")
+            ->orderBy('t.id', 'DESC')
+            ->setMaxResults($maxValue)
+            ->setFirstResult($firstValue)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 
     /*
