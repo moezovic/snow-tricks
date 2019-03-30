@@ -1,0 +1,13 @@
+   
+<div id="jq-com">
+    
+      {% for comment in comments %}
+        
+         <div>{{comment.user.nickName}} à écrit:{{comment.content}}</div>
+
+      {% endfor %}
+
+    
+  </div>
+   
+  <button class="btn btn-indigo" id="jq-plus">Plus</button>

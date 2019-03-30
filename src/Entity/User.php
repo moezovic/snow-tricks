@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -60,8 +62,20 @@ class User implements UserInterface, \Serializable {
      */
     private $roles = array();
 
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $nickName;
+
+
+    public function __toString()
+    {
+        return $this->getEmail();
+    }
+
     public function __construct() {
         $this->isActive = true;
+        $this->comments = new ArrayCollection();
         // may not be needed, see section on salt below
         // $this->salt = md5(uniqid('', true));
     }
@@ -161,5 +175,49 @@ class User implements UserInterface, \Serializable {
 
         return $this;
     }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNickName(): ?string
+    {
+        return $this->nickName;
+    }
+
+    public function setNickName(string $nickName): self
+    {
+        $this->nickName = $nickName;
+
+        return $this;
+    }
+
 
 }

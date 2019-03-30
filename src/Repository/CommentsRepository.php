@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Comments;
+use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -16,25 +16,45 @@ class CommentsRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, Comments::class);
+        parent::__construct($registry, Comment::class);
     }
 
     // /**
     //  * @return Comments[] Returns an array of Comments objects
     //  */
-    /*
-    public function findByExampleField($value)
+
+    public function findComments($trickId, $firstResult=0)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('c.trick = :id')
+            ->setParameter('id', $trickId)
+            ->setMaxResults(4)
+            ->setFirstResult($firstResult)
+            ->orderBy('c.id', 'DESC')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
+
+
+
+    // /**
+    //  * @return Comments[] Returns an array of Comments objects
+    //  */
+    
+    // public function findByExampleField($value)
+    // {
+    //     return $this->createQueryBuilder('c')
+    //         ->andWhere('c.exampleField = :val')
+    //         ->setParameter('val', $value)
+    //         ->orderBy('c.id', 'ASC')
+    //         ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
+    
 
     /*
     public function findOneBySomeField($value): ?Comments

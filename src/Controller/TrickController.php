@@ -5,6 +5,13 @@ namespace App\Controller;
 use App\Entity\Trick;
 use App\Form\TrickType;
 use App\Repository\TrickRepository;
+use App\Entity\Comment;
+use App\Form\CommentType;
+use App\Repository\CommentsRepository;
+use App\Entity\User;
+use App\Repository\UserRepository;
+
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,14 +99,31 @@ class TrickController extends AbstractController
 
 
     /**
-     * @Route("/{id}", name="trick_show", methods={"GET"})
+     * @Route("/{id}", name="trick_show", methods={"GET","POST"})
      */
-    public function show(Trick $trick): Response
-    {
+    public function show(Trick $trick, Request $request): Response
+    {   
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setTrick($trick);
+            $comment->setUser($this->getUser());
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($comment);
+            $entityManager->flush();
+            $comment->setContent("");
+        }
+
          $niveau = Trick::NIVEAU[$trick->getNiveau()];
          $trick_group = Trick::NIVEAU[$trick->getTrickGroup()];
 
         return $this->render('trick/show.html.twig', [
+          'comment'=> $comment,
+          'form' => $form->createView(),
           'trick' => $trick,
           'niveau' => $niveau,
           'trick_group' => $trick_group
@@ -179,6 +203,32 @@ class TrickController extends AbstractController
         ]);
         
     }
+
+
+    /**
+     * @Route("/new_comments/{id}", name="new_comments", methods={"POST"})
+     */
+    public function newComments(CommentsRepository $commentRepo, Request $request, Trick $trick){
+
+      if (null !== $request->request->get('first')) {
+        return $this->render('trick/comments.html.twig', [
+
+        'comments' => $commentRepo->findComments($trick->getId(), $request->request->get('first'))
+            
+        ]);
+      }
+      else
+      {
+        return $this->render('trick/comments.html.twig', [
+
+        'comments' => $commentRepo->findComments($trick->getId())
+            
+        ]);
+      }
+
+        
+    }
+
 
     /**
      * @return string
