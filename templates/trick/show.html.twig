@@ -92,7 +92,7 @@
         var number_com = $('#jq-com > div').length;
       $.post( "{{path('new_comments',{id:trick.id})}}", {first: number_com})
         .done(function(comms){
-          $('#comments_block').append(comms);
+          $(comms).insertBefore("#jq-plus");
           // SI LE RESULTAT DE LA REQUETE EST VIDE OU QU IL Y A MOINS DE 3 TRICKS CACHER LE BUTTON
 
         })
