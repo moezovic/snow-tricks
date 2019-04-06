@@ -86,13 +86,16 @@
       $.post( "{{path('new_comments', {id:trick.id})}}")
         .done(function(comments){
           $('#comments_block').empty().append(comments);
-          console.log($('#jq-com > div').length % 4 == 0);
 
           $('#jq-plus').on('click', function(){
         var number_com = $('#jq-com > div').length;
       $.post( "{{path('new_comments',{id:trick.id})}}", {first: number_com})
         .done(function(comms){
           $(comms).insertBefore("#jq-plus");
+          if (!$(comms).hasClass("more")) {
+              $("#jq-plus").hide();
+          }
+          console.log(comms);
           // SI LE RESULTAT DE LA REQUETE EST VIDE OU QU IL Y A MOINS DE 3 TRICKS CACHER LE BUTTON
 
         })

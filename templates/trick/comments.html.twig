@@ -1,5 +1,5 @@
    
-<div id="jq-com">
+<div id="jq-com" {% if (comments|length == 5) %}class="more"{% endif%}>
     
       {% for comment in comments|slice(0,4) %}
         
@@ -10,6 +10,6 @@
     
   </div>
    
-  {% if comments|length == 5 %}
+  {% if (comments|length == 5) and (initial_load is defined) %}
       <button class="btn btn-indigo" id="jq-plus">Plus</button>
   {% endif %}

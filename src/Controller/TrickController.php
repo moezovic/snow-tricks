@@ -221,7 +221,8 @@ class TrickController extends AbstractController
       {
         return $this->render('trick/comments.html.twig', [
 
-        'comments' => $commentRepo->findComments($trick->getId())
+        'comments' => $commentRepo->findComments($trick->getId()),
+        'initial_load' => true
             
         ]);
       }
