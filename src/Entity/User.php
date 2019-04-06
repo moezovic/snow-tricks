@@ -2,42 +2,41 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity(fields="email",
- * message ="l'adresse email est deja utilisé"
- *)
+ * @ORM\Table(name="user")
+ * @UniqueEntity(fields="email")
+ * @ORM\Entity()
  */
-class User implements UserInterface, \Serializable 
-{
+class User implements UserInterface, \Serializable {
+
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
+     * @ORM\Id
      * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100, unique=true)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank(
-            message = "La valeur ne peut pas être vide."
+     * message = "La valeur ne peut pas être vide."
      *)
      * @Assert\Email(
-     *     message = "La valeur de votre émail '{{ value }}' n'est pas correcte.",
-     *     checkMX = true
-     * )
+     *     message = "La valeur de votre émail '{{ value }}' n'est pas correcte."
+     *)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(
-            message = "La valeur ne peut pas être vide."
+     *       message = "La valeur ne peut pas être vide."
      *)
      * @Assert\Length(
      *      min = 8,
@@ -46,118 +45,179 @@ class User implements UserInterface, \Serializable
      *      maxMessage = "Votre mot de passe doit contenir au moins 50 caractéres"
      * )
      */
+    private $plainPassword;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=50, unique=true)
-     * @Assert\NotBlank(
-            message = "La valeur ne peut pas être vide."
-     *)
-     * @Assert\Length(
-     *      min = 8,
-     *      max = 50,
-     *      minMessage = "Votre nom d'utilisateur doit contenir au moins 8 caractéres",
-     *      maxMessage = "Votre nom d'utilisateur doit contenir au moins 50 caractéres"
-     * )
-     */
-    private $username;
-
-    /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive;
 
-    public function __construct()
+    /**
+     * @ORM\Column(name="roles", type="array")
+     */
+    private $roles = array();
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $nickName;
+
+
+    public function __toString()
     {
-        $this->setIsActive(true);
+        return $this->getEmail();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
+    public function __construct() {
+        $this->isActive = true;
+        $this->comments = new ArrayCollection();
+        // may not be needed, see section on salt below
+        // $this->salt = md5(uniqid('', true));
     }
 
-    public function getEmail(): ?string
-    {
+    public function getUsername() {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    public function getIsActive(): ?bool
-    {
-        return $this->isActive;
-    }
-
-    public function setIsActive(bool $isActive): self
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
-    public function getRoles()
-    {
-        return array('ROLE_USER');
-    }
-
-    public function getSalt()
-    {
+    public function getSalt() {
+        // you *may* need a real salt depending on your encoder
+        // see section on salt below
         return null;
     }
 
-    public function eraseCredentials()
-    {
-
+    public function getPassword() {
+        return $this->password;
     }
 
-    public function serialize()
-    {
+    function setPassword($password) {
+        $this->password = $password;
+    }
+
+    public function getRoles() {
+        if (empty($this->roles)) {
+            return ['ROLE_USER'];
+        }
+        return $this->roles;
+    }
+
+    function addRole($role) {
+        $this->roles[] = $role;
+    }
+
+    public function eraseCredentials() {
+        
+    }
+
+    /** @see \Serializable::serialize() */
+    public function serialize() {
         return serialize(array(
             $this->id,
-            $this->username,
+            $this->email,
             $this->password,
+            $this->isActive,
+                // see section on salt below
+                // $this->salt,
         ));
     }
 
-    public function unserialize($serialized)
-    {
-        list(
-            $this->id,
-            $this->username,
-            $this->password,
-        ) = unserialize($serialized, array('allowed_classes' => false));
+    /** @see \Serializable::unserialize() */
+    public function unserialize($serialized) {
+        list (
+                $this->id,
+                $this->email,
+                $this->password,
+                $this->isActive,
+                // see section on salt below
+                // $this->salt
+                ) = unserialize($serialized);
     }
 
+    function getId() {
+        return $this->id;
+    }
+
+    function getEmail() {
+        return $this->email;
+    }
+
+    function getPlainPassword() {
+        return $this->plainPassword;
+    }
+
+    function getIsActive() {
+        return $this->isActive;
+    }
+
+    function setId($id) {
+        $this->id = $id;
+    }
+
+    function setEmail($email) {
+        $this->email = $email;
+    }
+
+    function setPlainPassword($plainPassword) {
+        $this->plainPassword = $plainPassword;
+    }
+
+    function setIsActive($isActive) {
+        $this->isActive = $isActive;
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNickName(): ?string
+    {
+        return $this->nickName;
+    }
+
+    public function setNickName(string $nickName): self
+    {
+        $this->nickName = $nickName;
+
+        return $this;
+    }
+
+
 }
-
-

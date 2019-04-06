@@ -6,11 +6,29 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
  */
 class Trick
 {
+
+    const NIVEAU = [
+      0 => "",
+      1 => "Facile",
+      2 => "Moyen",
+      3 => "Difficile",
+      4 => "Très difficile"
+    ];
+
+    const TRICK_GROUP = [
+      0 => "",
+      1 => "Les grabs",
+      2 => "Les rotations",
+      3 => "Les flips"
+    ];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -35,17 +53,56 @@ class Trick
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Ajouter une image")
+     * @Assert\Image(
+     *     minWidth = 200,
+     *     maxWidth = 1000,
+     *     minHeight = 200,
+     *     maxHeight = 1000
+     * )
      */
+
     private $cover;
+
+     /**
+     * @ORM\Column(type="array")
+     */
+    private $images;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 4,
+     *      minMessage = "Veuillez choisir un niveau de difficulté valide.",
+     *      maxMessage = "Veuillez choisir un niveau de difficulté valide.",
+     *      
+     * )
+     */
+    private $niveau;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\Range(
+     *      min = 1,
+     *      max = 3,
+     *      minMessage = "Veuillez choisir un type de figure valide.",
+     *      maxMessage = "Veuillez choisir un type de figure valide."
+     * )
+     */
+    private $trick_group;
+
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->dateCreation = new \DateTime();
+        $this->images = array();
     }
 
     public function getId(): ?int
@@ -89,12 +146,12 @@ class Trick
         return $this;
     }
 
-    public function getCover(): ?string
+    public function getCover()
     {
         return $this->cover;
     }
 
-    public function setCover(string $cover): self
+    public function setCover($cover): self
     {
         $this->cover = $cover;
 
@@ -131,5 +188,49 @@ class Trick
 
         return $this;
     }
+
+    public function getNiveau()
+    {
+        return $this->niveau;
+    }
+
+    public function setNiveau($niveau): self
+    {
+        $this->niveau = $niveau;
+
+        return $this;
+    }
+
+    public function getTrickGroup()
+    {
+        return $this->trick_group;
+    }
+
+    public function setTrickGroup($trick_group): self
+    {
+        $this->trick_group = $trick_group;
+
+        return $this;
+    }
+
+    public function getImages(): ?array
+    {
+        return $this->images;
+    }
+
+    public function setImages(array $images): self
+    {
+        $this->images = $images;
+
+        return $this;
+    }
+
+        public function addImage(string $image): self
+    {
+        $this->images[] = $image;
+
+        return $this;
+    }
+
 
 }

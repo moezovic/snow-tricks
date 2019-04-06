@@ -2,37 +2,110 @@
 
 {% block title %}Trick{% endblock %}
 
-{% block body %}
-    <h1>Trick</h1>
+{% block body %} 
+{% block cover %}{% endblock %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ trick.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ trick.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ trick.description }}</td>
-            </tr>
-            <tr>
-                <th>DateCreation</th>
-                <td>{{ trick.dateCreation ? trick.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Cover</th>
-                <td>{{ trick.cover }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a href="{{ path('trick_index') }}">back to list</a>
+<!-- Jumbotron -->
+<div class="card card-image" style="background-image: url(https://mdbootstrap.com/img/Photos/Others/forest2.jpg);background-repeat: no-repeat; background-size: cover; background-position: center">
+  <div class="text-white text-center rgba-stylish-strong py-5 px-4">
+    <div class="py-5">
 
-    <a href="{{ path('trick_edit', {'id': trick.id}) }}">edit</a>
+      <!-- Content -->
+      <h2 class="h2 orange-text"><i class="fas fa-snowboarding"></i></h2>
+      <h1 class="card-title h2 my-4 py-2">{{ trick.name }}</h1>
+
+    </div>
+  </div>
+</div>
+<!-- Jumbotron -->
+
+
+<!-- Card -->
+<div class="card card-cascade wider reverse">
+
+  <!-- Card content -->
+  <div class="card-body card-body-cascade text-center">
+
+    <!-- Title -->
+    <h4 class="card-title"><strong>Détails</strong></h4>
+    <!-- Subtitle -->
+    <h6 class="font-weight-bold indigo-text py-2">Description</h6>
+    <!-- Text -->
+    <p class="card-text">{{trick.description}}</p>
+    <hr>
+
+    <p>Niveau : {{niveau}}</p>
+    <p>Type : {{trick_group}}</p>
+
+  </div>
+
+</div>
+<!-- Card -->
+
+<!-- Comments input-->
+
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+  <div>
+    {{form_start(form)}}
+
+      <div class="input-group flex-nowrap">
+       {{form_widget(form.content, { 'attr': {'class': 'form-control'} })}}
+
+       <button class="btn btn-indigo" id="jq-insert">Envoyer</button> 
+      </div>
+    {{form_end(form)}}
+  </div>
+
+  {% endif %}
+<!-- Comments input-->
+
+
+<!-- Comments Display-->
+<div id="comments_block">
+
+  
+</div>
+<!-- Comments Display-->
+
+
+    <a href="{{ path('trick_index')}}"  class="btn btn-outline-info">back to list</a>
+
+    <a href="{{ path('trick_edit', {'id': trick.id})}}" class="btn btn-outline-secondary">edit</a>
 
     {{ include('trick/_delete_form.html.twig') }}
+
+ </div>
+{% endblock %}
+
+{% block javascripts %}
+
+  <script type="text/javascript">
+    
+    $(document).ready(function(){
+      $.post( "{{path('new_comments', {id:trick.id})}}")
+        .done(function(comments){
+          $('#comments_block').empty().append(comments);
+
+          $('#jq-plus').on('click', function(){
+        var number_com = $('#jq-com > div').length;
+      $.post( "{{path('new_comments',{id:trick.id})}}", {first: number_com})
+        .done(function(comms){
+          $(comms).insertBefore("#jq-plus");
+          if (!$(comms).hasClass("more")) {
+              $("#jq-plus").hide();
+          }
+          console.log(comms);
+          // SI LE RESULTAT DE LA REQUETE EST VIDE OU QU IL Y A MOINS DE 3 TRICKS CACHER LE BUTTON
+
+        })
+        
+
+    });
+        }) 
+
+      });
+
+  </script>
+
 {% endblock %}

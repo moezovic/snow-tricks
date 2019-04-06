@@ -1,0 +1,15 @@
+   
+<div id="jq-com" {% if (comments|length == 5) %}class="more"{% endif%}>
+    
+      {% for comment in comments|slice(0,4) %}
+        
+         <div>{{comment.user.nickName}} à écrit:{{comment.content}}</div>
+
+      {% endfor %}
+
+    
+  </div>
+   
+  {% if (comments|length == 5) and (initial_load is defined) %}
+      <button class="btn btn-indigo" id="jq-plus">Plus</button>
+  {% endif %}

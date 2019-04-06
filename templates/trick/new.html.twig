@@ -3,9 +3,12 @@
 {% block title %}New Trick{% endblock %}
 
 {% block body %}
-    <h1>Create new Trick</h1>
+	{% block cover %}{% endblock %}
+	<div class="container">
+	    <h1 class="m-4">Ajouter une nouvelle figure</h1>
 
-    {{ include('trick/_form.html.twig') }}
+	    {{ include('trick/_form.html.twig') }}
 
-    <a href="{{ path('trick_index') }}">back to list</a>
+	    <a href="{{ path('trick_index') }}" class="btn btn-outline-info">back to list</a>
+	</div>
 {% endblock %}

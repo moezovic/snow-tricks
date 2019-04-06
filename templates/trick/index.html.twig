@@ -3,39 +3,35 @@
 {% block title %}Trick index{% endblock %}
 
 {% block body %}
-    <h1>Trick index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>DateCreation</th>
-                <th>Cover</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for trick in tricks %}
-            <tr>
-                <td>{{ trick.id }}</td>
-                <td>{{ trick.name }}</td>
-                <td>{{ trick.description }}</td>
-                <td>{{ trick.dateCreation ? trick.dateCreation|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ trick.cover }}</td>
-                <td>
-                    <a href="{{ path('trick_show', {'id': trick.id}) }}">show</a>
-                    <a href="{{ path('trick_edit', {'id': trick.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<section>
 
-    <a href="{{ path('trick_new') }}">Create new</a>
+  <div class="container-fluid">
+    <div class="row m-4" id="jq-card">
+
+    </div>
+    <button class="btn btn-default" id ="js-scroll-down">Right <i class="fas fa-magic ml-1"></i></button>
+  </div>
+  
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+
+  $(document).ready(function(){
+    $('#js-scroll-down').on('click', function(){
+     var number_trick = $('#jq-card > div').length;
+      $.post( "{{path('trick_ajax')}}", {first: number_trick})
+        .done(function(tricks){
+          $('#jq-card').append(tricks);
+          // SI LE RESULTAT DE LA REQUETE EST VIDE OU QU IL Y A MOINS DE 3 TRICKS CACHER LE BUTTON
+
+        })
+        
+
+    });
+  });
+  </script>
 {% endblock %}

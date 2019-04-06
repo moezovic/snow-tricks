@@ -17,21 +17,6 @@ class Comment
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=20)
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="string", length=20)
-     */
-    private $forename;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $cover;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $creation_date;
@@ -47,45 +32,20 @@ class Comment
      */
     private $trick;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
+     * @ORM\JoinColumn()
+     */
+    private $user;
+
+
+    public function __construct(){
+      $this->creation_date = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getForename(): ?string
-    {
-        return $this->forename;
-    }
-
-    public function setForename(string $forename): self
-    {
-        $this->forename = $forename;
-
-        return $this;
-    }
-
-    public function getCover(): ?string
-    {
-        return $this->cover;
-    }
-
-    public function setCover(string $cover): self
-    {
-        $this->cover = $cover;
-
-        return $this;
     }
 
     public function getCreationDate(): ?\DateTimeInterface
@@ -120,6 +80,18 @@ class Comment
     public function setTrick(?Trick $trick): self
     {
         $this->trick = $trick;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
