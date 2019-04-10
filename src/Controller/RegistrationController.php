@@ -4,11 +4,17 @@
 namespace App\Controller;
 
 use App\Form\UserType;
+use App\Form\EmailResetType;
+use App\Form\ResetPasswordType;
 use App\Entity\User;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -39,4 +45,98 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
         }
         return $this->render('registration/register.html.twig', ['form' => $form->createView(), 'mainNavRegistration' => true, 'title' => 'Inscription']);
     }
+
+    /**
+     * @Route("/forgotten_pass", name="forgotten_password")
+     */
+    public function forgottenPassword(Request $request, \Swift_Mailer $mailer){
+
+      $entityManager = $this->getDoctrine()->getManager();
+      $form = $this->createForm(EmailResetType::class);
+
+      $form->handleRequest($request);
+
+      if ($form->isSubmitted() && $form->isValid()){
+
+        //$email = $request->request->get('email');
+        $user  = $entityManager->getRepository(User::class)->findOneByEmail($form->getData()['email']);
+
+
+        if ($user === null) {
+                $this->addFlash('danger', 'Email Inconnu');
+                return $this->redirectToRoute('trick_index');
+
+            }
+        $token = uniqid();
+        try{
+                $user->setResetToken($token);
+                $entityManager->persist($user);
+                $entityManager->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('warning', $e->getMessage());
+                return $this->redirectToRoute('trick_index');
+            }
+
+
+
+             $url = $this->generateUrl('reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+
+
+            $message = (new \Swift_Message('Forgot Password'))
+                ->setFrom('thabti.moez@gmail.com')
+                ->setTo($user->getEmail())
+                ->setBody(
+                    "blablabla voici le token pour reseter votre mot de passe : " . $url,
+                    'text/html'
+                );
+ 
+            $mailer->send($message);
+
+ 
+            $this->addFlash('notice', 'Mail envoyé');
+ 
+            return $this->redirectToRoute('trick_index');
+
+
+      }
+      return $this->render('security/forgotten_password.html.twig',array('form' => $form->createView()));
+
+    }
+    /**
+     * @Route("/reset_pass", name="reset_password")
+     */
+    public function resetPassword(Request $request, UserPasswordEncoderInterface $encoder){
+
+
+      $token = $request->query->get('token');
+      if($token !== null){
+         $entityManager = $this->getDoctrine()->getManager();
+         $user = $entityManager->getRepository(User::class)->findOneByResetToken($token);
+         if($user !== null){
+           $form = $this->createForm(ResetPasswordType::class);
+           $form->handleRequest($request);
+      
+           if($form->isSubmitted() && $form->isValid()){
+           $plainPassword = $form->getData()['plainPassword'];
+           $encoded = $encoder->encodePassword($user, $plainPassword);
+           $user->setPassword($encoded);
+           $entityManager->persist($user);
+           $entityManager->flush();
+           
+           $this->addFlash('notice', 'Mot de passe mis à jour');
+           return $this->redirectToRoute('login');
+           }
+           
+           return $this->render('security/reset_password.html.twig', array('form' => $form->createView()));
+      
+         }
+      }
+
+         $this->addFlash('danger', 'Token Inconnu');
+         return $this->redirectToRoute('trick_index');
+              
+    }
 }
+
+
+

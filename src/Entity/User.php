@@ -68,6 +68,30 @@ class User implements UserInterface, \Serializable {
     private $nickName;
 
 
+    /**
+     * @var string le token qui servira lors de l'oubli de mot de passe
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $resetToken;
+
+    /**
+     * @return string
+     */
+    public function getResetToken(): string
+    {
+        return $this->resetToken;
+    }
+
+    /**
+     * @param string $resetToken
+     */
+    public function setResetToken(?string $resetToken): void
+    {
+        $this->resetToken = $resetToken;
+    }
+    
+
+
     public function __toString()
     {
         return $this->getEmail();
