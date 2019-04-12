@@ -64,11 +64,6 @@ class Trick
 
     private $cover;
 
-     /**
-     * @ORM\Column(type="array")
-     */
-    private $images;
-
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
      */
@@ -209,25 +204,6 @@ class Trick
     public function setTrickGroup($trick_group): self
     {
         $this->trick_group = $trick_group;
-
-        return $this;
-    }
-
-    public function getImages(): ?array
-    {
-        return $this->images;
-    }
-
-    public function setImages(array $images): self
-    {
-        $this->images = $images;
-
-        return $this;
-    }
-
-        public function addImage(string $image): self
-    {
-        $this->images[] = $image;
 
         return $this;
     }

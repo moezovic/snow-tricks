@@ -12,7 +12,9 @@
           <div class="col-md-6">{{form_row(form.cover)}}</div>
         </div>
         <div class="row">
-          <img src="{{ asset('uploads/images/' ~ trick.cover ) }}">
+          
+          <img src="{{ asset('uploads/images/' ~ trick.cover.filename ) }}"/>
+          
         </div>
       </div> 
    

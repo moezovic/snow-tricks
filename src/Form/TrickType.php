@@ -21,10 +21,6 @@ class TrickType extends AbstractType
             ->add('cover', FileType::class, [
               'label' => 'Image couverture',
             ])
-              ->add('images', FileType::class, [
-              'label' => 'Image',
-              'multiple' => true
-            ])
             
         ;
     }
