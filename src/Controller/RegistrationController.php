@@ -58,11 +58,13 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
 
       if ($form->isSubmitted() && $form->isValid()){
 
+
         //$email = $request->request->get('email');
         $user  = $entityManager->getRepository(User::class)->findOneByEmail($form->getData()['email']);
 
 
         if ($user === null) {
+
                 $this->addFlash('danger', 'Email Inconnu');
                 return $this->redirectToRoute('trick_index');
 
@@ -82,11 +84,11 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
              $url = $this->generateUrl('reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
 
-            $message = (new \Swift_Message('Forgot Password'))
+            $message = (new \Swift_Message('Mot de passe oublié'))
                 ->setFrom('thabti.moez@gmail.com')
                 ->setTo($user->getEmail())
                 ->setBody(
-                    "blablabla voici le token pour reseter votre mot de passe : " . $url,
+                    "Cliquez sur ce lien pour redéfinir un nouveau mot de passe : " . $url,
                     'text/html'
                 );
  
@@ -99,7 +101,7 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
 
 
       }
-      return $this->render('security/forgotten_password.html.twig',array('form' => $form->createView()));
+      return $this->render('security/forgotten_password.html.twig', array('form' => $form->createView(), 'title' => 'Recupérer mot de passe'));
 
     }
     /**
@@ -113,12 +115,11 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
          $entityManager = $this->getDoctrine()->getManager();
          $user = $entityManager->getRepository(User::class)->findOneByResetToken($token);
          if($user !== null){
-           $form = $this->createForm(ResetPasswordType::class);
+           $form = $this->createForm(ResetPasswordType::class, $user);
            $form->handleRequest($request);
       
            if($form->isSubmitted() && $form->isValid()){
-           $plainPassword = $form->getData()['plainPassword'];
-           $encoded = $encoder->encodePassword($user, $plainPassword);
+           $encoded = $encoder->encodePassword($user, $user->getPlainPassword);
            $user->setPassword($encoded);
            $entityManager->persist($user);
            $entityManager->flush();
