@@ -6,8 +6,12 @@
 	{% block cover %}{% endblock %}
 	<div class="container">
 	    <h1 class="m-4">Editer une figure</h1>
+      
+      <div class="row"> 
+        <img src="{{ asset('uploads/images/' ~ trick.cover.filename ) }}"/>    
+      </div>       
   
-	    {{ include('trick/_form.html.twig', {'button_label': 'Editer'}) }}
+	     {{ include('trick/_form.html.twig', {'button_label': 'Editer'}) }}
 
 	    <a class="m-4" href="{{ path('trick_index') }}">back to list</a>
 	    	{{ include('trick/_delete_form.html.twig') }}
