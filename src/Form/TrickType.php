@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class TrickType extends AbstractType
 {
@@ -19,9 +20,25 @@ class TrickType extends AbstractType
             ->add('description')
             ->add('niveau', ChoiceType::class, ['choices'=>array_flip(Trick::NIVEAU), 'label' => 'Niveau de difficulté'])
             ->add('trick_group' , ChoiceType::class, ['choices'=>array_flip(Trick::TRICK_GROUP), 'label' => 'Type de figure'])
-            ->add('cover', FileType::class, [
-              'label' => 'Image couverture',
-              'required' =>false,
+            // ->add('cover', FileType::class, [
+            //   'label' => 'Image couverture',
+            //   'required' =>false,
+            // ])
+            ->add('attachements', CollectionType::class, [
+               'entry_type' => FileType::class,
+               'prototype'      => true,
+               'allow_add'     => true,
+               'allow_delete'   => true,
+               'required' =>false,
+               'label' => false,
+           //     'constraints' => [
+           //     new FileType([
+           //        "maxSize" => "2M",
+           //        "maxSizeMessage" => "Votre document ne doit pas dépasser les 2 Mo.",
+           //        "mimeTypes" => ["image/png", "image/jpeg", "video/x-msvideo", "video/mp4"]
+           //     ])
+
+           // ],
             ])
             
         ;
@@ -32,14 +49,14 @@ class TrickType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Trick::class,
             // if image input field is empty consider a specefic constraint
-            'validation_groups' => function(FormInterface $form){
-              $cover = $form->get('cover')->getData();
-              if ($cover == null){
-                return ['Default'];
-              }
+            // 'validation_groups' => function(FormInterface $form){
+            //   $cover = $form->get('cover')->getData();
+            //   if ($cover == null){
+            //     return ['Default'];
+            //   }
 
-              return ['Default', 'mandatory'];
-            }
+            //   return ['Default', 'mandatory'];
+            // }
         ]);
     }
 }

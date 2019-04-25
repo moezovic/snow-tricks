@@ -52,7 +52,7 @@ class Trick
     private $dateCreation;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank(message="Ajouter une image", groups={"mandatory"})
      * @Assert\Image(
      *     minWidth = 200,
@@ -93,12 +93,16 @@ class Trick
      */
     private $trick_group;
 
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $attachements = [];
+
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->dateCreation = new \DateTime();
-        $this->images = array();
     }
 
     public function getId(): ?int
@@ -207,6 +211,23 @@ class Trick
         $this->trick_group = $trick_group;
 
         return $this;
+    }
+
+    public function getAttachements(): ?array
+    {
+        return $this->attachements;
+    }
+
+    public function setAttachements(?array $attachements): self
+    {
+        $this->attachements = $attachements;
+
+        return $this;
+    }
+    public function getImageAttachement(){
+      foreach ($this->attachements as $file) {
+        # code...
+      }
     }
 
 

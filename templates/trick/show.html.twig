@@ -6,6 +6,8 @@
 {% block cover %}{% endblock %}
 
 
+
+
 <!-- Jumbotron -->
 <div class="card card-image" style="background-image: url({{ asset('uploads/images/' ~ trick.cover)}});background-repeat: no-repeat; background-size: cover; background-position: center">
   <div class="text-white text-center rgba-stylish-strong py-5 px-4">
@@ -34,7 +36,13 @@
     <!-- Text -->
     <p class="card-text">{{trick.description}}</p>
     <hr>
-
+    {% for file in trick.attachements %}
+      {% if (file|split('.')|last) == ("png" or "jpeg" or "jpg") %}
+      <img src="{{ asset('uploads/images/' ~ file)}}">
+      {% endif %}
+      {% else %}
+      <video src="{{ asset('uploads/images/' ~ file)}}"></video>
+    {% endfor %}
     <p>Niveau : {{niveau}}</p>
     <p>Type : {{trick_group}}</p>
 

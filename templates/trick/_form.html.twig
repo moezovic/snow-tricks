@@ -9,10 +9,30 @@
         <div class="row">
           <div class="col-md-3">{{form_row(form.niveau)}}</div>
           <div class="col-md-3">{{form_row(form.trick_group)}}</div>
-          <div class="col-md-6">{{form_row(form.cover)}}</div>
+        </div>
+        <div>
+          
+          <div class="col-md-6">
+            <ul id="doc-fields-list"
+            data-prototype="{{ form_widget(form.attachements.vars.prototype)|e }}"
+            data-widget-tags="{{ '<li></li>'|e }}"
+            data-widget-counter="{{ form.children|length }}">
+          {% for doc in form.attachements %}
+              <li>
+                  {{ form_errors(doc) }}
+                  {{ form_widget(doc) }}
+              </li>
+          {% endfor %}
+          </ul>
+
+          <button type="button"
+            class="add-another-collection-widget btn btn-info"
+            data-list-selector="#doc-fields-list">Ajouter un visuel </button>
+          </div>
         </div>
 
-      </div> 
+      </div>
+
    
      
     <button class="btn btn-primary">{{ button_label|default('Valider') }}</button>

@@ -8,7 +8,7 @@
 	    <h1 class="m-4">Editer une figure</h1>
       
       <div class="row"> 
-        <img src="{{ asset('uploads/images/' ~ trick.cover.filename ) }}"/>    
+        <img src="{{ asset('uploads/images/' ~ trick.attachements[0].filename ) }}"/>    
       </div>       
   
 	     {{ include('trick/_form.html.twig', {'button_label': 'Editer'}) }}

@@ -50,22 +50,30 @@ class TrickController extends AbstractController
 
             // $file stores the uploaded file
 
-            $file = $form->get('cover')->getData();
-          
-            $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-            // Move the file to the directory where images are stored
-            try {
-                $file->move(
-                    $this->getParameter('image_directory'),
-                    $fileName
-                );
-            } catch (FileException $e) {
-                // ... handle exception if something happens during file upload
-            }
+            // $file = $form->get('cover')->getData();
+            $docs = $form->get('attachements')->getData();
+            $arrayOfDocs=[];
 
-            // updates the 'cover' property to store the image file name
-            // instead of its contents
-            $trick->setCover($fileName);
+            foreach ($docs as $file) {
+
+              $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+              $arrayOfDocs[] = $fileName;
+              // Move the file to the directory where images are stored
+              try {
+                  $file->move(
+                      $this->getParameter('image_directory'),
+                      $fileName
+                  );
+              } catch (FileException $e) {
+                  // ... handle exception if something happens during file upload
+              }
+
+              // updates the 'cover' property to store the image file name
+              // instead of its contents
+              // $trick->setCover($fileName);
+
+            }
+            $trick->setAttachements($arrayOfDocs);
 
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -120,14 +128,20 @@ class TrickController extends AbstractController
      */
     public function edit(Request $request, Trick $trick): Response
     {  
-      
-        $trick->setCover(new File($this->getParameter('image_directory').'/'.$trick->getCover()));
+        $docOfFiles = [];
+        $attachements = $trick->getAttachements();
+
+        foreach ($attachements as $file) {
+          $docOfFiles[] = new File($this->getParameter('image_directory').'/'.$file);
+        }
+
+        $trick->setAttachements($docOfFiles);
     
         $form = $this->createForm(TrickType::class, $trick);
 
         if ($request->isMethod('post')) {
 
-          $storedFile = $trick->getCover();
+          $storedFiles = $trick->getAttachements();
         }
 
         $form->handleRequest($request);
@@ -136,18 +150,24 @@ class TrickController extends AbstractController
        
         if ($form->isSubmitted() && $form->isValid()) {
           
+          $arrayOfDocs = $form->get('attachements')->getData();
 
-          if ($form->get('cover')->getData() == null && isset($storedFile)) {
+          if ($form->get('attachements')->getData() == null && isset($storedFile)) {
 
-              $trick->setCover(basename($storedFile));
+              $trick->setAttachements($storedFiles);
 
           }else{
 
-             // $file stores the uploaded file
+           // $file stores the uploaded file
 
-              $file = $form->get('cover')->getData();
+            // $file = $form->get('cover')->getData();
+            $docs = $form->get('attachements')->getData();
+            $arrayOfDocs=[];
+
+            foreach ($docs as $file) {
 
               $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+              $arrayOfDocs[] = $fileName;
               // Move the file to the directory where images are stored
               try {
                   $file->move(
@@ -160,13 +180,19 @@ class TrickController extends AbstractController
 
               // updates the 'cover' property to store the image file name
               // instead of its contents
-              $trick->setCover($fileName);
+              // $trick->setCover($fileName);
+
+            }
+            $trick->setAttachements($arrayOfDocs);
+
 
           }
 
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($trick);
+            $entityManager->flush();
 
-            return $this->redirectToRoute('trick_index', ['id' => $trick->getId()]);
+            return $this->redirectToRoute('trick_index');
         }
 
 
