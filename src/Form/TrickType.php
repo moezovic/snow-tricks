@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Trick;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -20,10 +21,7 @@ class TrickType extends AbstractType
             ->add('trick_group' , ChoiceType::class, ['choices'=>array_flip(Trick::TRICK_GROUP), 'label' => 'Type de figure'])
             ->add('cover', FileType::class, [
               'label' => 'Image couverture',
-            ])
-              ->add('images', FileType::class, [
-              'label' => 'Image',
-              'multiple' => true
+              'required' =>false,
             ])
             
         ;
@@ -33,6 +31,15 @@ class TrickType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Trick::class,
+            // if image input field is empty consider a specefic constraint
+            'validation_groups' => function(FormInterface $form){
+              $cover = $form->get('cover')->getData();
+              if ($cover == null){
+                return ['Default'];
+              }
+
+              return ['Default', 'mandatory'];
+            }
         ]);
     }
 }

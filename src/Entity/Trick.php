@@ -53,21 +53,17 @@ class Trick
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Ajouter une image")
+     * @Assert\NotBlank(message="Ajouter une image", groups={"mandatory"})
      * @Assert\Image(
      *     minWidth = 200,
      *     maxWidth = 1000,
      *     minHeight = 200,
-     *     maxHeight = 1000
+     *     maxHeight = 1000,
+     *     groups={"mandatory"}
      * )
      */
 
     private $cover;
-
-     /**
-     * @ORM\Column(type="array")
-     */
-    private $images;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
@@ -209,25 +205,6 @@ class Trick
     public function setTrickGroup($trick_group): self
     {
         $this->trick_group = $trick_group;
-
-        return $this;
-    }
-
-    public function getImages(): ?array
-    {
-        return $this->images;
-    }
-
-    public function setImages(array $images): self
-    {
-        $this->images = $images;
-
-        return $this;
-    }
-
-        public function addImage(string $image): self
-    {
-        $this->images[] = $image;
 
         return $this;
     }

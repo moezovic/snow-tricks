@@ -51,7 +51,7 @@ class TrickController extends AbstractController
             // $file stores the uploaded file
 
             $file = $form->get('cover')->getData();
-            $files = $form->get('images')->getData();
+          
             $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
             // Move the file to the directory where images are stored
             try {
@@ -66,22 +66,6 @@ class TrickController extends AbstractController
             // updates the 'cover' property to store the image file name
             // instead of its contents
             $trick->setCover($fileName);
-
-            foreach ($files as $file) {
-               $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-                // Move the file to the directory where images are stored
-                try {
-                    $file->move(
-                        $this->getParameter('image_directory'),
-                        $fileName
-                    );
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
-                $trick->addImage($fileName);
-            }
-
 
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -136,39 +120,55 @@ class TrickController extends AbstractController
      */
     public function edit(Request $request, Trick $trick): Response
     {  
-        $trick->setCover(
-        new File($this->getParameter('image_directory').'/'.$trick->getCover())
-        );
+      
+        $trick->setCover(new File($this->getParameter('image_directory').'/'.$trick->getCover()));
     
         $form = $this->createForm(TrickType::class, $trick);
+
+        if ($request->isMethod('post')) {
+
+          $storedFile = $trick->getCover();
+        }
+
         $form->handleRequest($request);
 
 
+       
         if ($form->isSubmitted() && $form->isValid()) {
+          
 
+          if ($form->get('cover')->getData() == null && isset($storedFile)) {
 
- // $file stores the uploaded file
+              $trick->setCover(basename($storedFile));
 
-        $file = $form->get('cover')->getData();
-        $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-        // Move the file to the directory where images are stored
-        try {
-            $file->move(
-                $this->getParameter('image_directory'),
-                $fileName
-            );
-        } catch (FileException $e) {
-            // ... handle exception if something happens during file upload
-        }
+          }else{
 
-        // updates the 'cover' property to store the image file name
-        // instead of its contents
-        $trick->setCover($fileName);
+             // $file stores the uploaded file
+
+              $file = $form->get('cover')->getData();
+
+              $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+              // Move the file to the directory where images are stored
+              try {
+                  $file->move(
+                      $this->getParameter('image_directory'),
+                      $fileName
+                  );
+              } catch (FileException $e) {
+                  // ... handle exception if something happens during file upload
+              }
+
+              // updates the 'cover' property to store the image file name
+              // instead of its contents
+              $trick->setCover($fileName);
+
+          }
 
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('trick_index', ['id' => $trick->getId()]);
         }
+
 
         return $this->render('trick/edit.html.twig', [
 
