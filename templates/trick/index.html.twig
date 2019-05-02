@@ -23,6 +23,7 @@
   $(document).ready(function(){
     $('#js-scroll-down').on('click', function(){
      var number_trick = $('#jq-card > div').length;
+     
       $.post( "{{path('trick_ajax')}}", {first: number_trick})
         .done(function(tricks){
           $('#jq-card').append(tricks);

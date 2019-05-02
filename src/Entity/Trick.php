@@ -66,7 +66,7 @@ class Trick
     private $cover;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick", cascade={"persist","remove"})
      */
     private $comments;
 
@@ -221,6 +221,12 @@ class Trick
     public function setAttachements(?array $attachements): self
     {
         $this->attachements = $attachements;
+
+        return $this;
+    }
+    public function addAttachement(?string $attachement): self
+    {
+        $this->attachements[] = $attachement;
 
         return $this;
     }

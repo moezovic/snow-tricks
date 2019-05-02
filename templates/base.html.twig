@@ -75,6 +75,9 @@
       {% if is_granted('ROLE_USER') %}
 
           <li class="nav-item">
+            <a class="nav-link" href="{{path('trick_new')}}">Nouvelle figure</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="{{path('logout')}}">Deconnexion</a>
           </li>
       {% endif %}

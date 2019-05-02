@@ -27,7 +27,7 @@ class Comment
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="comments", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;

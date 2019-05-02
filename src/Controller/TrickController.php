@@ -37,7 +37,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="trick_new", methods={"GET","POST"})
+     * @Route("member/new", name="trick_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -83,7 +83,7 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('trick_index');
         }
 
-        return $this->render('trick/new.html.twig', [
+        return $this->render('member/new.html.twig', [
             'trick' => $trick,
             'form' => $form->createView(),
         ]);
@@ -107,11 +107,12 @@ class TrickController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
-            $comment->setContent("");
+            $comment = new Comment();
+            $form = $this->createForm(CommentType::class, $comment);
         }
 
          $niveau = Trick::NIVEAU[$trick->getNiveau()];
-         $trick_group = Trick::NIVEAU[$trick->getTrickGroup()];
+         $trick_group = Trick::TRICK_GROUP[$trick->getTrickGroup()];
 
         return $this->render('trick/show.html.twig', [
           'comment'=> $comment,
@@ -124,7 +125,7 @@ class TrickController extends AbstractController
 
 
     /**
-     * @Route("/{id}/edit", name="trick_edit", methods={"GET","POST"})
+     * @Route("member/{id}/edit", name="trick_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Trick $trick): Response
     {  
@@ -196,7 +197,7 @@ class TrickController extends AbstractController
         }
 
 
-        return $this->render('trick/edit.html.twig', [
+        return $this->render('member/edit.html.twig', [
 
             'trick' => $trick,
             'form' => $form->createView(),
@@ -204,7 +205,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="trick_delete", methods={"DELETE"})
+     * @Route("member/{id}/delete", name="trick_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Trick $trick): Response
     {
