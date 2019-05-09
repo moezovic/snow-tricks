@@ -24,7 +24,7 @@
 <!-- Jumbotron -->
 
 <div class="docs-container"> 
-    {% for file in trick.attachements %}
+    {% for file in trick.imgDocs %}
     {% if (file|split('.')|last) == ("png" or "jpeg" or "jpg") %}
     <img src="{{ asset('uploads/images/' ~ file)}}" class="thumbnails-docs" data-toggle="modal" data-target="#{{(file|split('.')|first)}}">
 

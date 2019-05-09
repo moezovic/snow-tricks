@@ -96,7 +96,12 @@ class Trick
     /**
      * @ORM\Column(type="array", nullable=true)
      */
-    private $attachements = [];
+    private $imgDocs = [];
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $videoDocs = [];
 
 
     public function __construct()
@@ -213,27 +218,34 @@ class Trick
         return $this;
     }
 
-    public function getAttachements(): ?array
+    public function getImgDocs(): ?array
     {
-        return $this->attachements;
+        return $this->imgDocs;
     }
 
-    public function setAttachements(?array $attachements): self
+    public function setImgDocs(?array $attachements): self
     {
-        $this->attachements = $attachements;
-
-        return $this;
-    }
-    public function addAttachement(?string $attachement): self
-    {
-        $this->attachements[] = $attachement;
+        $this->imgDocs = $attachements;
 
         return $this;
     }
-    public function getImageAttachement(){
-      foreach ($this->attachements as $file) {
-        # code...
-      }
+    public function addImgDocs(?string $attachement): self
+    {
+        $this->imgDocs[] = $attachement;
+
+        return $this;
+    }
+
+    public function getVideoDocs(): ?array
+    {
+        return $this->videoDocs;
+    }
+
+    public function setVideoDocs(?array $videoDocs): self
+    {
+        $this->videoDocs = $videoDocs;
+
+        return $this;
     }
 
 
