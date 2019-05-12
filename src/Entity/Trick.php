@@ -51,19 +51,6 @@ class Trick
      */
     private $dateCreation;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\NotBlank(message="Ajouter une image", groups={"mandatory"})
-     * @Assert\Image(
-     *     minWidth = 200,
-     *     maxWidth = 1000,
-     *     minHeight = 200,
-     *     maxHeight = 1000,
-     *     groups={"mandatory"}
-     * )
-     */
-
-    private $cover;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick", cascade={"persist","remove"})
@@ -151,17 +138,6 @@ class Trick
         return $this;
     }
 
-    public function getCover()
-    {
-        return $this->cover;
-    }
-
-    public function setCover($cover): self
-    {
-        $this->cover = $cover;
-
-        return $this;
-    }
 
     /**
      * @return Collection|Comment[]
@@ -224,9 +200,9 @@ class Trick
     }
 
     public function setImgDocs(?array $attachements): self
-    {
+    {   
         $this->imgDocs = $attachements;
-
+  
         return $this;
     }
     public function addImgDocs(?string $attachement): self
@@ -246,6 +222,19 @@ class Trick
         $this->videoDocs = $videoDocs;
 
         return $this;
+    }
+
+    public function getFirstImg()
+    {   
+        reset($this->imgDocs);
+        return current($this->imgDocs);
+    }
+
+    public function getRemainingImg(){
+
+        reset($this->imgDocs); 
+        return array_diff($this->imgDocs, [current($this->imgDocs)]);
+
     }
 
 

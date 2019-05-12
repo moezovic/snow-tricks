@@ -27,7 +27,7 @@ class TrickType extends AbstractType
                 'constraints'  => array(
                   new File(['maxSize' => '2M',
                   "maxSizeMessage" => "Votre document ne doit pas dépasser les 2 Mo.",
-                  "mimeTypes" => [" video/x-msvideo", "video/mp4"],
+                  "mimeTypes" => ["image/jpeg", "image/png"],
                   "mimeTypesMessage" => "Le document doit avoir une des extensions suivantes : jpeg, png, jpg.",
                         ]),
                    ),
