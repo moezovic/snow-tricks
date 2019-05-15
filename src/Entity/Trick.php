@@ -205,7 +205,7 @@ class Trick
   
         return $this;
     }
-    public function addImgDocs(?string $attachement): self
+    public function addImgDoc(?string $attachement): self
     {
         $this->imgDocs[] = $attachement;
 
