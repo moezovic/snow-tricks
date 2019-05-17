@@ -11,7 +11,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="user")
- * @UniqueEntity(fields="email")
+ * @UniqueEntity(
+ * fields="email",
+ * message="Cet Email est deja utilisé"
+ *)
  * @ORM\Entity()
  */
 class User implements UserInterface, \Serializable {
@@ -29,7 +32,7 @@ class User implements UserInterface, \Serializable {
      * message = "La valeur ne peut pas être vide."
      *)
      * @Assert\Email(
-     *     message = "La valeur de votre émail '{{ value }}' n'est pas correcte."
+     *     message = "La valeur de votre émail '{{ value }}' n'est pas correcte.",
      *)
      */
     private $email;
@@ -43,6 +46,10 @@ class User implements UserInterface, \Serializable {
      *      max = 50,
      *      minMessage = "Votre mot de passe doit contenir au moins 8 caractéres",
      *      maxMessage = "Votre mot de passe doit contenir au moins 50 caractéres"
+     * )
+     * @Assert\Regex(
+     *     pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/",
+     *     message="Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule"
      * )
      */
     private $plainPassword;
