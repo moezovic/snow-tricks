@@ -5,11 +5,13 @@
 {% block body %}
 	{% block cover %}{% endblock %}
 	<div class="container">
-	    <h1 class="m-4">Editer une figure</h1>
-  
-	    {{ include('trick/_form.html.twig', {'button_label': 'Editer'}) }}
+	 <h1 class="m-4">Editer une figure</h1>
 
+  
+	   {{ include('trick/_form.html.twig', {'button_label': 'Editer'}) }}
+
+  </div> 
 	    <a class="m-4" href="{{ path('trick_index') }}">back to list</a>
-	    	{{ include('trick/_delete_form.html.twig') }}
-   </div>
+	    {{ include('member/_delete_form.html.twig') }}
+
 {% endblock %}

@@ -7,11 +7,20 @@
 <section>
 
   <div class="container-fluid">
-    <div class="row m-4" id="jq-card">
+    <div>
+      <div class="row" id="jq-card">    
+      </div>
+
+      <div class="mx-auto text-center">
+        <img src="{{ asset('img/loading_spinner.gif')}}" id="spin-img">
+      </div>
 
     </div>
-    <button class="btn btn-default" id ="js-scroll-down">Right <i class="fas fa-magic ml-1"></i></button>
+     
+    <button class="btn btn-default" id ="js-scroll-down"><i class="fas fa-arrow-down ml-1"></i></button>
   </div>
+</div>
+
   
 </section>
 
@@ -21,16 +30,34 @@
 <script type="text/javascript">
 
   $(document).ready(function(){
-    $('#js-scroll-down').on('click', function(){
-     var number_trick = $('#jq-card > div').length;
-      $.post( "{{path('trick_ajax')}}", {first: number_trick})
+    
+    $('#spin-img').hide()
+    var tricks_count;
+
+    // initial request to get the tricks'number from db
+    $.post( "{{path('trick_ajax')}}")
+      .done(function(count){  tricks_count = parseInt(count);})
+
+    if (tricks_count == 0) {$('#js-scroll-down').hide();}
+
+    $('#js-scroll-down').on('click', function(e){
+
+      $('#spin-img').show()
+      var appended_tricks = $('#jq-card >.card-deck > div').length;
+     
+      $.post( "{{path('trick_ajax')}}", {first: appended_tricks})
         .done(function(tricks){
+          $('#spin-img').hide()
           $('#jq-card').append(tricks);
-          // SI LE RESULTAT DE LA REQUETE EST VIDE OU QU IL Y A MOINS DE 3 TRICKS CACHER LE BUTTON
-
+          var tricks_number = $('#jq-card > .card-deck > div').length;
+          // if there is no more tricks in the db hide button
+          if (tricks_number == tricks_count) {
+            $('#js-scroll-down').hide();
+          }   
         })
-        
-
+      // scroll page down whenever the loading button is clicked
+      var n = $(document).height();
+      $('html, body').animate({ scrollTop:  $('body').offset().top + n }, 'slow');
     });
   });
   </script>

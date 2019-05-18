@@ -41,7 +41,7 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
             // ... do any other work - like sending them an email, etc
             // maybe set a "flash" success message for the user
             $this->addFlash('success', 'Votre compte à bien été enregistré.');
-            //return $this->redirectToRoute('login');
+            return $this->redirectToRoute('login');
         }
         return $this->render('registration/register.html.twig', ['form' => $form->createView(), 'mainNavRegistration' => true, 'title' => 'Inscription']);
     }
@@ -119,7 +119,7 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
            $form->handleRequest($request);
       
            if($form->isSubmitted() && $form->isValid()){
-           $encoded = $encoder->encodePassword($user, $user->getPlainPassword);
+           $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
            $user->setPassword($encoded);
            $entityManager->persist($user);
            $entityManager->flush();

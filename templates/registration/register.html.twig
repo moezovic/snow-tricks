@@ -13,6 +13,14 @@
                   <h3><i class="fa fa-user"></i> Créer un compte</h3>	
                </div>
                <!-- Body -->
+
+                <div class="md-form">
+                  <i class="fa fa-user prefix"></i>
+                   {{ form_widget(form.nickName, {'attr': {'class': 'form-control mb-4'}}) }}
+                   {{ form_label(form.nickName, "Nom d'utilisateur") }}
+                  
+                </div>
+
               	<div class="md-form">
                   <i class="fa fa-envelope prefix"></i>
               		 {{ form_widget(form.email, {'attr': {'class': 'form-control mb-4'}}) }}

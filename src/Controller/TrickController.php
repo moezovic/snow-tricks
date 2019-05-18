@@ -37,7 +37,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="trick_new", methods={"GET","POST"})
+     * @Route("member/new", name="trick_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -48,24 +48,10 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // $file stores the uploaded file
-
-            $file = $form->get('cover')->getData();
-          
-            $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-            // Move the file to the directory where images are stored
-            try {
-                $file->move(
-                    $this->getParameter('image_directory'),
-                    $fileName
-                );
-            } catch (FileException $e) {
-                // ... handle exception if something happens during file upload
-            }
-
-            // updates the 'cover' property to store the image file name
-            // instead of its contents
-            $trick->setCover($fileName);
+            
+            
+            $trick->setVideoDocs($this->docsInputManager($form->get('videoDocs')->getData()));
+            $trick->setImgDocs($this->docsInputManager($form->get('imgDocs')->getData()));
 
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -75,7 +61,7 @@ class TrickController extends AbstractController
             return $this->redirectToRoute('trick_index');
         }
 
-        return $this->render('trick/new.html.twig', [
+        return $this->render('member/new.html.twig', [
             'trick' => $trick,
             'form' => $form->createView(),
         ]);
@@ -99,11 +85,12 @@ class TrickController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
-            $comment->setContent("");
+            $comment = new Comment();
+            $form = $this->createForm(CommentType::class, $comment);
         }
 
          $niveau = Trick::NIVEAU[$trick->getNiveau()];
-         $trick_group = Trick::NIVEAU[$trick->getTrickGroup()];
+         $trick_group = Trick::TRICK_GROUP[$trick->getTrickGroup()];
 
         return $this->render('trick/show.html.twig', [
           'comment'=> $comment,
@@ -116,18 +103,24 @@ class TrickController extends AbstractController
 
 
     /**
-     * @Route("/{id}/edit", name="trick_edit", methods={"GET","POST"})
+     * @Route("member/{id}/edit", name="trick_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Trick $trick): Response
     {  
-      
-        $trick->setCover(new File($this->getParameter('image_directory').'/'.$trick->getCover()));
+        $docOfFiles = [];
+        $attachements = $trick->getImgDocs();
+
+        foreach ($attachements as $file) {
+          $docOfFiles[] = new File($this->getParameter('image_directory').'/'.$file);
+        }
+
+        $trick->setImgDocs($docOfFiles);
     
         $form = $this->createForm(TrickType::class, $trick);
 
         if ($request->isMethod('post')) {
 
-          $storedFile = $trick->getCover();
+          $storedFiles = $trick->getImgDocs();
         }
 
         $form->handleRequest($request);
@@ -136,18 +129,24 @@ class TrickController extends AbstractController
        
         if ($form->isSubmitted() && $form->isValid()) {
           
+          $arrayOfDocs = $form->get('imgDocs')->getData();
 
-          if ($form->get('cover')->getData() == null && isset($storedFile)) {
+          if ($form->get('imgDocs')->getData() == null && isset($storedFile)) {
 
-              $trick->setCover(basename($storedFile));
+              $trick->setImgDocs($storedFiles);
 
           }else{
 
-             // $file stores the uploaded file
+           // $file stores the uploaded file
 
-              $file = $form->get('cover')->getData();
+            // $file = $form->get('cover')->getData();
+            $docs = $form->get('imgDocs')->getData();
+            $arrayOfDocs=[];
+
+            foreach ($docs as $file) {
 
               $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+              $arrayOfDocs[] = $fileName;
               // Move the file to the directory where images are stored
               try {
                   $file->move(
@@ -160,17 +159,23 @@ class TrickController extends AbstractController
 
               // updates the 'cover' property to store the image file name
               // instead of its contents
-              $trick->setCover($fileName);
+              // $trick->setCover($fileName);
+
+            }
+            $trick->setImgDocs($arrayOfDocs);
+
 
           }
 
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($trick);
+            $entityManager->flush();
 
-            return $this->redirectToRoute('trick_index', ['id' => $trick->getId()]);
+            return $this->redirectToRoute('trick_index');
         }
 
 
-        return $this->render('trick/edit.html.twig', [
+        return $this->render('member/edit.html.twig', [
 
             'trick' => $trick,
             'form' => $form->createView(),
@@ -178,7 +183,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="trick_delete", methods={"DELETE"})
+     * @Route("member/{id}/delete", name="trick_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Trick $trick): Response
     {
@@ -195,13 +200,22 @@ class TrickController extends AbstractController
      * @Route("/ajax/", name="trick_ajax", methods={"POST"})
      */
     public function ajax(TrickRepository $trickRepository, Request $request){
-      
+
+      if (!$request->request->has('first')) {
+
+         return $this->render('trick/ajax.html.twig', [
+          'count' => $trickRepository->countTricks()  
+        ]);
+          
+      }else{
+
         return $this->render('trick/ajax.html.twig', [
 
-            'tricks' => $trickRepository->loadXtricks($request->request->get('first'), 3),
-            
+            'tricks' => $trickRepository->loadXtricks($request->request->get('first'), 4),    
         ]);
-        
+
+      }   
+   
     }
 
 
@@ -239,5 +253,36 @@ class TrickController extends AbstractController
         // md5() reduces the similarity of the file names generated by
         // uniqid(), which is based on timestamps
         return md5(uniqid());
+    }
+
+    /**
+     * generate unique names for docs and manage their storage
+     * @return array
+     */
+    private function docsInputManager($docs){
+
+      $arrayOfDocs=[];
+
+      if (!empty($docs)) {
+
+         foreach ($docs as $file) {
+
+            $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+            $arrayOfDocs[] = $fileName;
+            // Move the file to the directory where images are stored
+              try {
+                  $file->move(
+                      $this->getParameter('image_directory'),
+                      $fileName
+                  );
+              } catch (FileException $e) {
+                  // ... handle exception if something happens during file upload
+              }
+
+            }
+      }
+
+      return $arrayOfDocs;
+
     }
 }

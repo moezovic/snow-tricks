@@ -51,22 +51,9 @@ class Trick
      */
     private $dateCreation;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="Ajouter une image", groups={"mandatory"})
-     * @Assert\Image(
-     *     minWidth = 200,
-     *     maxWidth = 1000,
-     *     minHeight = 200,
-     *     maxHeight = 1000,
-     *     groups={"mandatory"}
-     * )
-     */
-
-    private $cover;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick", cascade={"persist","remove"})
      */
     private $comments;
 
@@ -93,12 +80,21 @@ class Trick
      */
     private $trick_group;
 
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $imgDocs = [];
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $videoDocs = [];
+
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->dateCreation = new \DateTime();
-        $this->images = array();
     }
 
     public function getId(): ?int
@@ -142,17 +138,6 @@ class Trick
         return $this;
     }
 
-    public function getCover()
-    {
-        return $this->cover;
-    }
-
-    public function setCover($cover): self
-    {
-        $this->cover = $cover;
-
-        return $this;
-    }
 
     /**
      * @return Collection|Comment[]
@@ -207,6 +192,49 @@ class Trick
         $this->trick_group = $trick_group;
 
         return $this;
+    }
+
+    public function getImgDocs(): ?array
+    {
+        return $this->imgDocs;
+    }
+
+    public function setImgDocs(?array $attachements): self
+    {   
+        $this->imgDocs = $attachements;
+  
+        return $this;
+    }
+    public function addImgDoc(?string $attachement): self
+    {
+        $this->imgDocs[] = $attachement;
+
+        return $this;
+    }
+
+    public function getVideoDocs(): ?array
+    {
+        return $this->videoDocs;
+    }
+
+    public function setVideoDocs(?array $videoDocs): self
+    {
+        $this->videoDocs = $videoDocs;
+
+        return $this;
+    }
+
+    public function getFirstImg()
+    {   
+        reset($this->imgDocs);
+        return current($this->imgDocs);
+    }
+
+    public function getRemainingImg(){
+
+        reset($this->imgDocs); 
+        return array_diff($this->imgDocs, [current($this->imgDocs)]);
+
     }
 
 

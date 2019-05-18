@@ -4,11 +4,13 @@
 
 {% block body %} 
 {% block cover %}{% endblock %}
-
-
 <!-- Jumbotron -->
-<div class="card card-image" style="background-image: url({{ asset('uploads/images/' ~ trick.cover)}});background-repeat: no-repeat; background-size: cover; background-position: center">
+<div class="card card-image" style="background-image: url('{{ asset('uploads/images/' ~ trick.getFirstImg)}}'), url('{{ asset('img/non-disponible.jpg')}}');background-repeat: no-repeat; background-size: cover; background-position: center">
   <div class="text-white text-center rgba-stylish-strong py-5 px-4">
+    <div class="edit-delete-btn">
+      <a href="{{ path('trick_edit', {'id': trick.id})}}" class="btn btn-warning">edit</a>
+      {{ include('member/_delete_form.html.twig') }}
+    </div>
     <div class="py-5">
 
       <!-- Content -->
@@ -20,6 +22,41 @@
 </div>
 <!-- Jumbotron -->
 
+<div class="docs-container"> 
+  
+    {% for file in trick.getRemainingImg() %}
+
+    <img src="{{ asset('uploads/images/' ~ file)}}" class="thumbnails-docs" data-toggle="modal" data-target="#{{(file|split('.')|first)}}">
+
+
+  <!--Modal: modalYT-->
+  <div class="modal fade" id="{{(file|split('.')|first)}}" tabindex="-1" role="dialog" aria-labelledby="{{(file|split('.')|first)}}"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+
+      <!--Content-->
+      <div class="modal-content">
+
+        <!--Body-->
+        <div class="modal-body mb-0 p-0">
+
+          <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+              <img src="{{ asset('uploads/images/' ~ file)}}" class="embed-responsive-item">
+          </div>
+        </div>
+
+      </div>
+      <!--/.Content-->
+
+    </div>
+  </div>
+  <!--Modal: modalYT-->
+
+  
+  {% endfor %}
+</div>
+
+
 
 <!-- Card -->
 <div class="card card-cascade wider reverse">
@@ -28,16 +65,40 @@
   <div class="card-body card-body-cascade text-center">
 
     <!-- Title -->
-    <h4 class="card-title"><strong>Détails</strong></h4>
-    <!-- Subtitle -->
-    <h6 class="font-weight-bold indigo-text py-2">Description</h6>
+    <h4 class="card-title"><strong>Description</strong></h4>
     <!-- Text -->
     <p class="card-text">{{trick.description}}</p>
     <hr>
-
-    <p>Niveau : {{niveau}}</p>
-    <p>Type : {{trick_group}}</p>
-
+    <div class="trick-info-collapse">
+      <p>
+      <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#multiCollapseExample1" aria-expanded="false" aria-controls="multiCollapseExample2">Niveau</button>
+      <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Catégorie</button>
+      <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample2">Date d'ajout</button>
+    </p>
+    <div class="row">
+      <div class="col">
+        <div class="collapse multi-collapse" id="multiCollapseExample1">
+          <div class="card card-body alert alert-dark">
+            {{niveau}}
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="collapse multi-collapse" id="multiCollapseExample2">
+          <div class="card card-body alert alert-dark">
+            {{trick_group}}
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="collapse multi-collapse" id="multiCollapseExample3">
+          <div class="card card-body alert alert-dark">
+            {{trick.datecreation|date('d/m/Y')}}
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
   </div>
 
 </div>
@@ -46,10 +107,11 @@
 <!-- Comments input-->
 
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+<div class="comments-container">
   <div>
     {{form_start(form)}}
 
-      <div class="input-group flex-nowrap">
+      <div class="input-group flex-nowrap comment-input">
        {{form_widget(form.content, { 'attr': {'class': 'form-control'} })}}
 
        <button class="btn btn-indigo" id="jq-insert">Envoyer</button> 
@@ -62,20 +124,13 @@
 
 
 <!-- Comments Display-->
-<div id="comments_block">
+  <div id="comments_block">
 
-  
-</div>
+    
+  </div>
 <!-- Comments Display-->
+</div>
 
-
-    <a href="{{ path('trick_index')}}"  class="btn btn-outline-info">back to list</a>
-
-    <a href="{{ path('trick_edit', {'id': trick.id})}}" class="btn btn-outline-secondary">edit</a>
-
-    {{ include('trick/_delete_form.html.twig') }}
-
- </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -95,7 +150,6 @@
           if (!$(comms).hasClass("more")) {
               $("#jq-plus").hide();
           }
-          console.log(comms);
           // SI LE RESULTAT DE LA REQUETE EST VIDE OU QU IL Y A MOINS DE 3 TRICKS CACHER LE BUTTON
 
         })

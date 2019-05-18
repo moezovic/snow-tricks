@@ -3,3 +3,53 @@
     height: 15vw;
     object-fit: cover;
 }
+
+.docs-container{
+  margin: 20px;
+  display: flex;
+  justify-content: space-around;
+}
+.thumbnails-docs{
+  height: 200px;
+  width: 200px;
+  border: 1px solid;
+}
+
+.edit-delete-btn{
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0
+}
+#js-scroll-down{
+  position: fixed;
+  bottom: 50px;
+  right:0;
+}
+
+.comment-input, #comments_block{
+  width: 50%;
+  margin: auto;
+  padding: 20px;
+}
+.comments-container{
+  margin: 20px
+}
+
+ /* loading spinner */
+
+#spin-img{
+  width: 50px;
+  margin: 1%;
+}
+
+#trash-icon
+{
+  color: #007bff !important;
+  border: none;
+}
+#jq-card, .ajax-card{
+  display: flex;
+  justify-content: space-around;
+}
+

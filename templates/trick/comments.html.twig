@@ -2,12 +2,12 @@
 <div id="jq-com" {% if (comments|length == 5) %}class="more"{% endif%}>
     
       {% for comment in comments|slice(0,4) %}
-        
-         <div>{{comment.user.nickName}} à écrit:{{comment.content}}</div>
+       <div class="alert alert-success">
+         <strong>{{comment.user.nickName}}</strong> à écrit: <strong>{{comment.content}}</strong> 
+       </div>
 
       {% endfor %}
 
-    
   </div>
    
   {% if (comments|length == 5) and (initial_load is defined) %}
