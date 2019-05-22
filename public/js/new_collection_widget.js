@@ -1,6 +1,6 @@
 
 jQuery(document).ready(function () {
-    jQuery('.add-another-collection-widget').click(function (e) {
+    jQuery('.add-another-collection-img,.add-another-collection-video').click(function (e) {
         var list = jQuery(jQuery(this).attr('data-list-selector'));
         // Try to find the counter of the list or use the length of the list
         var counter = list.data('widget-counter') | list.children().length;
@@ -9,7 +9,12 @@ jQuery(document).ready(function () {
         var newWidget = list.attr('data-prototype');
         // replace the "__name__" used in the id and name of the prototype
         // with a number that's unique to your fields
-        newWidget = newWidget.replace(/__name__/g, counter);
+        if($(this).hasClass("add-another-collection-img")){
+            newWidget = newWidget.replace(/__image__/g, counter);
+        }else{
+            newWidget = newWidget.replace(/__video__/g, counter);
+        }
+        
         // Increase the counter
         counter++;
         // And store it, the length cannot be used if deleting widgets is allowed

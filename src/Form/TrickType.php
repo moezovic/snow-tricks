@@ -32,7 +32,7 @@ class TrickType extends AbstractType
                         ]),
                    ),
                 ),
-                  
+               'prototype_name' => '__image__',
                'prototype'      => true,
                'allow_add'     => true,
                'allow_delete'   => true,
@@ -51,7 +51,7 @@ class TrickType extends AbstractType
                         ]),
                    ),
                 ),
-                  
+               'prototype_name' => '__video__',
                'prototype'      => true,
                'allow_add'     => true,
                'allow_delete'   => true,

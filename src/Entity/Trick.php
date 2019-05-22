@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+use Cocur\Slugify\Slugify;
+
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -105,6 +107,11 @@ class Trick
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function getSlugName(): ?string
+    {
+      return (new Slugify())->slugify($this->name);
     }
 
     public function setName(string $name): self

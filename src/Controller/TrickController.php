@@ -69,10 +69,16 @@ class TrickController extends AbstractController
 
 
     /**
-     * @Route("/{id}", name="trick_show", methods={"GET","POST"})
+     * @Route("/{slug}-{id}", name="trick_show", methods={"GET","POST"}, requirements= {"slug": "[a-z0-9\-]*"})
      */
-    public function show(Trick $trick, Request $request): Response
+    public function show(Trick $trick, Request $request, string $slug): Response
     {   
+        if ($trick->getSlugName() !== $slug) {
+          return $this->redirectToRoute("trick_show", [
+            'id' => $trick->getId(),
+            'slug' => $trick->getSlugName()
+          ], 301);
+        }
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
 
