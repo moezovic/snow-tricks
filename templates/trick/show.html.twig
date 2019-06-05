@@ -8,7 +8,7 @@
 <div class="card card-image" style="background-image: url('{{ asset('uploads/images/' ~ trick.getFirstImg)}}'), url('{{ asset('img/non-disponible.jpg')}}');background-repeat: no-repeat; background-size: cover; background-position: center">
   <div class="text-white text-center rgba-stylish-strong py-5 px-4">
     <div class="edit-delete-btn">
-      <a href="{{ path('trick_edit', {'id': trick.id})}}" class="btn btn-warning">edit</a>
+      <a href="{{ path('trick_edit', {'id': trick.id})}}" class="btn btn-warning btn-sm">edit</a>
       {{ include('member/_delete_form.html.twig') }}
     </div>
     <div class="py-5">
@@ -111,7 +111,7 @@
   <div>
     {{form_start(form)}}
 
-      <div class="input-group flex-nowrap comment-input">
+      <div class="comment-input text-center">
        {{form_widget(form.content, { 'attr': {'class': 'form-control'} })}}
 
        <button class="btn btn-indigo" id="jq-insert">Envoyer</button> 
@@ -124,7 +124,7 @@
 
 
 <!-- Comments Display-->
-  <div id="comments_block">
+  <div id="comments_block" class="text-center">
 
     
   </div>

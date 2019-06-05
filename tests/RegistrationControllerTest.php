@@ -73,6 +73,8 @@ class RegistrationControllerTest extends WebTestCase
         );
     }
 
+    
+
     public function testUniqueEmail()
     {
       $client = static::createClient();
