@@ -171,10 +171,11 @@
 					{% for type, messages in app.session.flashbag.all() %}
 		   				{% for message in messages %}
 		   						new Noty({
-		   						progressBar: true,
-		   						timeout: 3000,
-		   						type: '{{type}}',
-    							text: '{{message}}',
+		   						 animation: {
+                        open: 'animated bounceInRight', // Animate.css class names
+                        close: 'animated bounceOutRight' // Animate.css class names
+                     },
+    							text: '<div class="text-center alert alert-{{type}}">{{message}}</div>',
 									}).show();
 					   {% endfor %}
  					{% endfor %}

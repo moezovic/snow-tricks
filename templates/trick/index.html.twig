@@ -6,9 +6,9 @@
 
 <section>
 
-  <div class="container-fluid">
+  <div class="container">
     <div>
-      <div class="row" id="jq-card">    
+      <div class="d-flex row justify-content-start mx-auto" id="jq-card">    
       </div>
 
       <div class="mx-auto text-center">
@@ -43,15 +43,15 @@
     $('#js-scroll-down').on('click', function(e){
 
       $('#spin-img').show()
-      var appended_tricks = $('#jq-card >.card-deck > div').length;
+      var appended_tricks = $('#jq-card > div >.card').length;
      
       $.post( "{{path('trick_ajax')}}", {first: appended_tricks})
         .done(function(tricks){
           $('#spin-img').hide()
           $('#jq-card').append(tricks);
-          var tricks_number = $('#jq-card > .card-deck > div').length;
+          var total_tricks = $('#jq-card > div >.card').length;
           // if there is no more tricks in the db hide button
-          if (tricks_number == tricks_count) {
+          if (total_tricks == tricks_count) {
             $('#js-scroll-down').hide();
           }   
         })
