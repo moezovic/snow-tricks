@@ -113,20 +113,33 @@ class TrickController extends AbstractController
      */
     public function edit(Request $request, Trick $trick): Response
     {  
-        $docOfFiles = [];
-        $attachements = $trick->getImgDocs();
+      //-- Keeping old files if no new were added --//
+        $imgFiles = [];
+        $imgAttachements = $trick->getImgDocs();
 
-        foreach ($attachements as $file) {
-          $docOfFiles[] = new File($this->getParameter('image_directory').'/'.$file);
+        $videoFiles = [];
+        $videoAttachements = $trick->getVideoDocs();
+
+        foreach ($imgAttachements as $file) {
+          $imgFiles[] = new File($this->getParameter('image_directory').'/'.$file);
         }
 
-        $trick->setImgDocs($docOfFiles);
+        $trick->setImgDocs($imgFiles);
+
+
+        foreach ($videoAttachements as $file) {
+          $videoFiles[] = new File($this->getParameter('image_directory').'/'.$file);
+        }
+
+        $trick->setVideoDocs($videoFiles);
+
     
         $form = $this->createForm(TrickType::class, $trick);
 
         if ($request->isMethod('post')) {
 
-          $storedFiles = $trick->getImgDocs();
+          $storedImages = $trick->getImgDocs();
+          $storedVideos = $trick->getVideoDocs();
         }
 
         $form->handleRequest($request);
@@ -135,24 +148,23 @@ class TrickController extends AbstractController
        
         if ($form->isSubmitted() && $form->isValid()) {
           
-          $arrayOfDocs = $form->get('imgDocs')->getData();
+          $uploadedImg = $form->get('imgDocs')->getData();
+          $uploadedImg = $form->get('videoDocs')->getData();
 
-          if ($form->get('imgDocs')->getData() == null && isset($storedFile)) {
 
-              $trick->setImgDocs($storedFiles);
+          if ($form->get('imgDocs')->getData() == null && isset($storedImages)) {
+
+              $trick->setImgDocs($this->docsInputManager($storedImages));
 
           }else{
 
-           // $file stores the uploaded file
+            $imgDocs = $form->get('imgDocs')->getData();
+            $uploadedImg =[];
 
-            // $file = $form->get('cover')->getData();
-            $docs = $form->get('imgDocs')->getData();
-            $arrayOfDocs=[];
-
-            foreach ($docs as $file) {
+            foreach ($imgDocs as $file) {
 
               $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-              $arrayOfDocs[] = $fileName;
+              $uploadedImg[] = $fileName;
               // Move the file to the directory where images are stored
               try {
                   $file->move(
@@ -163,15 +175,43 @@ class TrickController extends AbstractController
                   // ... handle exception if something happens during file upload
               }
 
-              // updates the 'cover' property to store the image file name
-              // instead of its contents
-              // $trick->setCover($fileName);
 
             }
-            $trick->setImgDocs($arrayOfDocs);
-
+            $trick->setImgDocs($uploadedImg);
 
           }
+
+
+          if ($form->get('videoDocs')->getData() == null && isset($storedVideos)) {
+
+              $trick->setVideoDocs($this->docsInputManager($storedVideos));
+
+          }else{
+
+            $videoDocs = $form->get('videoDocs')->getData();
+            $uploadedVideos =[];
+
+            foreach ($videoDocs as $file) {
+
+              $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+              $uploadedVideos[] = $fileName;
+              // Move the file to the directory where images are stored
+              try {
+                  $file->move(
+                      $this->getParameter('image_directory'),
+                      $fileName
+                  );
+              } catch (FileException $e) {
+                  // ... handle exception if something happens during file upload
+              }
+
+
+            }
+            $trick->setImgDocs($uploadedVideos);
+
+          }
+
+
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($trick);
