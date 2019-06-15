@@ -11,6 +11,9 @@ use App\Repository\CommentsRepository;
 use App\Entity\User;
 use App\Repository\UserRepository;
 
+use App\Service\UploadedFileManager;
+use App\Service\TemporaryFileManager;
+
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +26,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class TrickController extends AbstractController
 {
+
+  private $uploadedFile;
+
+  public function __construct(UploadedFileManager $uploadedFile){
+
+    $this->uploadedFile = $uploadedFile;
+
+  }
     /**
      * @Route("/", name="trick_index", methods={"GET"})
      */
@@ -47,11 +58,9 @@ class TrickController extends AbstractController
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             
-            
-            $trick->setVideoDocs($this->docsInputManager($form->get('videoDocs')->getData()));
-            $trick->setImgDocs($this->docsInputManager($form->get('imgDocs')->getData()));
+            $trick->setVideoDocs($this->uploadedFile->docsInputManager($form->get('videoDocs')->getData()));
+            $trick->setImgDocs($this->uploadedFile->docsInputManager($form->get('imgDocs')->getData()));
 
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -111,105 +120,60 @@ class TrickController extends AbstractController
     /**
      * @Route("member/{id}/edit", name="trick_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Trick $trick): Response
+    public function edit(Request $request, Trick $trick, TemporaryFileManager $temporaryStorage): Response
     {  
-      //-- Keeping old files if no new were added --//
-        $imgFiles = [];
-        $imgAttachements = $trick->getImgDocs();
 
-        $videoFiles = [];
-        $videoAttachements = $trick->getVideoDocs();
+      $temporaryStorage->setTempImg($trick->getImgDocs());
+      $temporaryStorage->setTempVideo($trick->getVideoDocs());
 
-        foreach ($imgAttachements as $file) {
-          $imgFiles[] = new File($this->getParameter('image_directory').'/'.$file);
-        }
-
-        $trick->setImgDocs($imgFiles);
-
-
-        foreach ($videoAttachements as $file) {
-          $videoFiles[] = new File($this->getParameter('image_directory').'/'.$file);
-        }
-
-        $trick->setVideoDocs($videoFiles);
+      $trick->setImgDocs($temporaryStorage->getTempImg());
+      $trick->setVideoDocs($temporaryStorage->getTempVideo());
 
     
         $form = $this->createForm(TrickType::class, $trick);
 
         if ($request->isMethod('post')) {
 
-          $storedImages = $trick->getImgDocs();
-          $storedVideos = $trick->getVideoDocs();
+          $storedImages = $temporaryStorage->getTempImg();
+          $storedVideos = $temporaryStorage->getTempVideo();
         }
 
         $form->handleRequest($request);
 
-
        
         if ($form->isSubmitted() && $form->isValid()) {
-          
-          $uploadedImg = $form->get('imgDocs')->getData();
-          $uploadedImg = $form->get('videoDocs')->getData();
 
 
-          if ($form->get('imgDocs')->getData() == null && isset($storedImages)) {
+          // if ($form->get('imgDocs')->getData() == null && isset($storedImages)) {
 
-              $trick->setImgDocs($this->docsInputManager($storedImages));
+          //     $trick->setImgDocs($this->uploadedFile->docsInputManager($storedImages));
 
-          }else{
+          // }else{
 
-            $imgDocs = $form->get('imgDocs')->getData();
-            $uploadedImg =[];
+          //   $imgDocs = $form->get('imgDocs')->getData();
+          //   $uploadedImg = $this->uploadedFile->docsInputManager($imgDocs);
 
-            foreach ($imgDocs as $file) {
+          //   $trick->setImgDocs($uploadedImg);
 
-              $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-              $uploadedImg[] = $fileName;
-              // Move the file to the directory where images are stored
-              try {
-                  $file->move(
-                      $this->getParameter('image_directory'),
-                      $fileName
-                  );
-              } catch (FileException $e) {
-                  // ... handle exception if something happens during file upload
-              }
+          // }
 
 
-            }
-            $trick->setImgDocs($uploadedImg);
+          // if ($form->get('videoDocs')->getData() == null && isset($storedVideos)) {
 
-          }
+          //     $trick->setVideoDocs($this->uploadedFile->docsInputManager($storedVideos));
 
+          // }else{
 
-          if ($form->get('videoDocs')->getData() == null && isset($storedVideos)) {
+          //   $videoDocs = $form->get('videoDocs')->getData();
+          //   $uploadedVideos = $this->uploadedFile->docsInputManager($videoDocs);
 
-              $trick->setVideoDocs($this->docsInputManager($storedVideos));
+          //   $trick->setImgDocs($uploadedVideos);
 
-          }else{
+          // }
 
-            $videoDocs = $form->get('videoDocs')->getData();
-            $uploadedVideos =[];
+         $trick =  $this->validateEdition($form,$trick,'imgDocs', $storedImages);
+         $trick = $this->validateEdition($form,$trick, 'videoDocs', $storedVideos);
 
-            foreach ($videoDocs as $file) {
-
-              $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-              $uploadedVideos[] = $fileName;
-              // Move the file to the directory where images are stored
-              try {
-                  $file->move(
-                      $this->getParameter('image_directory'),
-                      $fileName
-                  );
-              } catch (FileException $e) {
-                  // ... handle exception if something happens during file upload
-              }
-
-
-            }
-            $trick->setImgDocs($uploadedVideos);
-
-          }
 
 
 
@@ -290,45 +254,52 @@ class TrickController extends AbstractController
         
     }
 
+    private function validateEdition($form,$trick, $identifier, $array){
 
-    /**
-     * @return string
-     */
-    private function generateUniqueFileName()
-    {
-        // md5() reduces the similarity of the file names generated by
-        // uniqid(), which is based on timestamps
-        return md5(uniqid());
-    }
 
-    /**
-     * generate unique names for docs and manage their storage
-     * @return array
-     */
-    private function docsInputManager($docs){
+// if ($form->get('imgDocs')->getData() == null && isset($storedImages)) {
 
-      $arrayOfDocs=[];
+          //     $trick->setImgDocs($this->uploadedFile->docsInputManager($storedImages));
 
-      if (!empty($docs)) {
+          // }else{
 
-         foreach ($docs as $file) {
+          //   $imgDocs = $form->get('imgDocs')->getData();
+          //   $uploadedImg = $this->uploadedFile->docsInputManager($imgDocs);
 
-            $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-            $arrayOfDocs[] = $fileName;
-            // Move the file to the directory where images are stored
-              try {
-                  $file->move(
-                      $this->getParameter('image_directory'),
-                      $fileName
-                  );
-              } catch (FileException $e) {
-                  // ... handle exception if something happens during file upload
-              }
+          //   $trick->setImgDocs($uploadedImg);
 
-            }
+          // }
+
+
+          // if ($form->get('videoDocs')->getData() == null && isset($storedVideos)) {
+
+          //     $trick->setVideoDocs($this->uploadedFile->docsInputManager($storedVideos));
+
+          // }else{
+
+          //   $videoDocs = $form->get('videoDocs')->getData();
+          //   $uploadedVideos = $this->uploadedFile->docsInputManager($videoDocs);
+
+          //   $trick->setImgDocs($uploadedVideos);
+
+          // }
+      
+
+      if ($form->get($identifier)->getData() == null && isset($array)) {
+           $files2Save = $this->uploadedFile->docsInputManager($array);
+           ($identifier == 'imgDocs')? $trick->setImgDocs($files2Save): $trick->setVideoDocs($files2Save);
+
+      }else{
+
+        $docs = $form->get($identifier)->getData();
+        $files2Save = $this->uploadedFile->docsInputManager($docs);
+
+        ($identifier == 'imgDocs')? $trick->setImgDocs($files2Save): $trick->setVideoDocs($files2Save);
+
       }
 
-      return $arrayOfDocs;
+      return $trick;
 
     }
+
 }
