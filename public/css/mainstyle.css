@@ -24,6 +24,8 @@
   bottom: 0;
   right: 0
 }
+
+
 .edit-Page-row {
   display: flex;
 }
@@ -80,3 +82,10 @@
   }
 }
 
+
+  @media (max-width:768px) {
+    .card-img-top {
+    height: auto;
+    }
+    
+  }
