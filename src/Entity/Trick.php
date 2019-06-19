@@ -237,12 +237,5 @@ class Trick
         return current($this->imgDocs);
     }
 
-    public function getRemainingImg(){
-
-        reset($this->imgDocs); 
-        return array_diff($this->imgDocs, [current($this->imgDocs)]);
-
-    }
-
 
 }
