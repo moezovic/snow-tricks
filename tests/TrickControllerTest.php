@@ -132,7 +132,7 @@ class TrickControllerTest extends WebTestCase
 
       $trick = $tricks[0];
 
-      $crawler = $client->request('DELETE', '/member/'. $trick->getId() .'/delete');
+      $client->request('DELETE', '/member/'. $trick->getId() .'/delete');
 
       $this->assertTrue(
           $client->getResponse()->isRedirect('/')

@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EmailResetType extends AbstractType
 {
-  public function buildForm(FormBuilderInterface $builder, array $options){
+  public function buildForm(FormBuilderInterface $builder){
 
     $builder
         ->add('email')
@@ -17,12 +17,4 @@ class EmailResetType extends AbstractType
 
   }
 
-  // public function configureOptions(OptionsResolver $resolver)
-  // {
-  //   $resolver->setDefault(array(
-
-  //     'data_class' => null,
-
-  //   ));
-  // }
 }

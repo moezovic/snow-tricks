@@ -144,37 +144,8 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
 
-          // if ($form->get('imgDocs')->getData() == null && isset($storedImages)) {
-
-          //     $trick->setImgDocs($this->uploadedFile->docsInputManager($storedImages));
-
-          // }else{
-
-          //   $imgDocs = $form->get('imgDocs')->getData();
-          //   $uploadedImg = $this->uploadedFile->docsInputManager($imgDocs);
-
-          //   $trick->setImgDocs($uploadedImg);
-
-          // }
-
-
-          // if ($form->get('videoDocs')->getData() == null && isset($storedVideos)) {
-
-          //     $trick->setVideoDocs($this->uploadedFile->docsInputManager($storedVideos));
-
-          // }else{
-
-          //   $videoDocs = $form->get('videoDocs')->getData();
-          //   $uploadedVideos = $this->uploadedFile->docsInputManager($videoDocs);
-
-          //   $trick->setImgDocs($uploadedVideos);
-
-          // }
-
          $trick =  $this->validateEdition($form,$trick,'imgDocs', $storedImages);
          $trick = $this->validateEdition($form,$trick, 'videoDocs', $storedVideos);
-
-
 
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -241,49 +212,19 @@ class TrickController extends AbstractController
             
         ]);
       }
-      else
-      {
+ 
         return $this->render('trick/comments.html.twig', [
 
         'comments' => $commentRepo->findComments($trick->getId()),
         'initial_load' => true
             
         ]);
-      }
 
         
     }
 
     private function validateEdition($form,$trick, $identifier, $array){
 
-
-// if ($form->get('imgDocs')->getData() == null && isset($storedImages)) {
-
-          //     $trick->setImgDocs($this->uploadedFile->docsInputManager($storedImages));
-
-          // }else{
-
-          //   $imgDocs = $form->get('imgDocs')->getData();
-          //   $uploadedImg = $this->uploadedFile->docsInputManager($imgDocs);
-
-          //   $trick->setImgDocs($uploadedImg);
-
-          // }
-
-
-          // if ($form->get('videoDocs')->getData() == null && isset($storedVideos)) {
-
-          //     $trick->setVideoDocs($this->uploadedFile->docsInputManager($storedVideos));
-
-          // }else{
-
-          //   $videoDocs = $form->get('videoDocs')->getData();
-          //   $uploadedVideos = $this->uploadedFile->docsInputManager($videoDocs);
-
-          //   $trick->setImgDocs($uploadedVideos);
-
-          // }
-      
 
       if ($form->get($identifier)->getData() == null && isset($array)) {
            $files2Save = $this->uploadedFile->docsInputManager($array);
