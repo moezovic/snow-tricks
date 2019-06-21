@@ -41,9 +41,11 @@ class TrickController extends AbstractController
     {
         $tricks = $trickRepository->findAll();
 
+
         return $this->render('trick/index.html.twig', [
           'tricks' => $tricks,
             'fixed_menu'=> 'enabled'
+
         ]);
     }
 

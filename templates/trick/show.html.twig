@@ -53,6 +53,39 @@
  </div>
   {% endfor %}
 
+  {% for file in trick.getVideoDocs() %}
+ <div class="col-sm-6 col-md-4 col-lg-3 m-0 p-3">
+    <a><img src="{{ asset('img/video-icon.jpg')}}" class="thumbnails-docs" data-toggle="modal" data-target="#modal{{(file|split('.')|first)}}"></a>
+
+
+  <!--Modal: modalYT-->
+  <div class="modal fade" id="modal{{(file|split('.')|first)}}" tabindex="-1" role="dialog" aria-labelledby="{{(file|split('.')|first)}}" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+
+      <!--Content-->
+      <div class="modal-content">
+
+        <!--Body-->
+        <div class="modal-body mb-0 p-0">
+
+          <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+
+            <video  class="embed-responsive-item" controls>
+              <source src="{{ asset('uploads/images/' ~ file)}}" type="video/mp4" allowfullscreen>
+            </video>
+
+          </div>
+        </div>
+
+      </div>
+      <!--/.Content-->
+
+    </div>
+  </div>
+  <!--Modal: modalYT-->
+ </div>
+  {% endfor %}
+
 </div>
 
 
