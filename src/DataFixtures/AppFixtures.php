@@ -50,9 +50,19 @@ class AppFixtures extends Fixture
           // $trick->addImgDoc("4002d37a3879c2d63c8e6aed7ad31449.jpeg");
           $imageFile = [];
 
-          $imageFile[] = new File($this->rootDirectory .'/public/img/fixtures/img-'. ($i+1) .'.jpg','img-'. ($i+1) .'.jpg', 'image/jpeg', null, null, true);
+          if (file_exists($this->rootDirectory .'/public/img/fixtures/img/img-'. ($i+1) .'.jpg')) {
+            $imageFile[] = new File($this->rootDirectory .'/public/img/fixtures/img/img-'. ($i+1) .'.jpg','img-'. ($i+1) .'.jpg', 'image/jpeg', null, null, true);
+          }
+
+          $videoFile = [];
+
+          if (file_exists($this->rootDirectory .'/public/img/fixtures/video/video-'. ($i+1) .'.mp4')) {
+            $videoFile[] = new File($this->rootDirectory .'/public/img/fixtures/video/video-'. ($i+1) .'.mp4','video-'. ($i+1) .'.mp4', 'video/mp4', null, null, true);
+          }
+
 
           $trick->setImgDocs($this->uploadedFile->docsInputManager($imageFile));
+          $trick->setVideoDocs($this->uploadedFile->docsInputManager($videoFile));
 
           for ($ii=0; $ii < 5; $ii++) { 
             $comment = new comment();

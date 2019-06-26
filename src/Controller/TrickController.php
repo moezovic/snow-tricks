@@ -84,7 +84,9 @@ class TrickController extends AbstractController
      */
     public function show(Trick $trick, Request $request, string $slug): Response
     {   
+
         if ($trick->getSlugName() !== $slug) {
+
           return $this->redirectToRoute("trick_show", [
             'id' => $trick->getId(),
             'slug' => $trick->getSlugName()
