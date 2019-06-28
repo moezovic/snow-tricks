@@ -53,7 +53,7 @@ class RegistrationControllerTest extends WebTestCase
         $crawler = $client->submit($form);
 
         $this->assertEquals(
-          1, $crawler->filter('body:contains("Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule")')->count()
+          1, $crawler->filter('body:contains("Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule.")')->count()
         );
 
     }

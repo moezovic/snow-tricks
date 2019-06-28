@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
 
         $user->setEmail('admin@admin.com');
 
-        $password = $this->encoder->encodePassword($user, 'pass_1234');
+        $password = $this->encoder->encodePassword($user, 'Pass_1234');
         $user->setPassword($password);
 
         $manager->persist($user);

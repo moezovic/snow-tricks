@@ -6,6 +6,12 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 
+
+/**
+ * The main role of this service is to handle file loading:
+ *  - generate new file names
+ *  - manage their storage
+ */
 class UploadedFileManager
 {
   private $rootDirectory;

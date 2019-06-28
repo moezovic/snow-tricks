@@ -68,15 +68,7 @@ class TrickType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Trick::class,
-            // if image input field is empty consider a specefic constraint
-            // 'validation_groups' => function(FormInterface $form){
-            //   $cover = $form->get('cover')->getData();
-            //   if ($cover == null){
-            //     return ['Default'];
-            //   }
 
-            //   return ['Default', 'mandatory'];
-            // }
         ]);
     }
 }

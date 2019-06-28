@@ -23,7 +23,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-
+/**
+ * handle all requests related to trick diplay and management
+ */
 class TrickController extends AbstractController
 {
 
@@ -35,6 +37,7 @@ class TrickController extends AbstractController
 
   }
     /**
+     * Action : get home page
      * @Route("/", name="trick_index", methods={"GET"})
      */
     public function index(TrickRepository $trickRepository): Response
@@ -50,6 +53,7 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Action : Create new trick
      * @Route("member/new", name="trick_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
@@ -80,6 +84,7 @@ class TrickController extends AbstractController
 
 
     /**
+     * Action : display a trick details page
      * @Route("/{slug}-{id}", name="trick_show", methods={"GET","POST"}, requirements= {"slug": "[a-z0-9\-]*"})
      */
     public function show(Trick $trick, Request $request, string $slug): Response
@@ -122,6 +127,7 @@ class TrickController extends AbstractController
 
 
     /**
+     * Action : Edit a trick
      * @Route("member/{id}/edit", name="trick_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Trick $trick, TemporaryFileManager $temporaryStorage): Response
@@ -168,6 +174,7 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Action : delete a trick
      * @Route("member/{id}/delete", name="trick_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Trick $trick): Response
@@ -182,6 +189,7 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Action : ajax request to get or count tricks from the db
      * @Route("/ajax/", name="trick_ajax", methods={"POST"})
      */
     public function ajax(TrickRepository $trickRepository, Request $request){
@@ -205,6 +213,7 @@ class TrickController extends AbstractController
 
 
     /**
+     * Action : Ajax request: Add comments to trick details page
      * @Route("/new_comments/{id}", name="new_comments", methods={"POST"})
      */
     public function newComments(CommentsRepository $commentRepo, Request $request, Trick $trick){
@@ -226,7 +235,10 @@ class TrickController extends AbstractController
 
         
     }
-
+    /**
+     * Action : check if  old files are associated to a trick
+     *          before adding new files
+     */
     private function validateEdition($form,$trick, $identifier, $array){
 
 
