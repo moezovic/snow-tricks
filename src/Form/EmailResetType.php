@@ -17,12 +17,4 @@ class EmailResetType extends AbstractType
 
   }
 
-  // public function configureOptions(OptionsResolver $resolver)
-  // {
-  //   $resolver->setDefault(array(
-
-  //     'data_class' => null,
-
-  //   ));
-  // }
 }

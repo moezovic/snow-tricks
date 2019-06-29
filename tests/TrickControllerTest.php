@@ -4,8 +4,14 @@ namespace App\Tests;
 
 use App\Entity\Trick;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
+
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Functional testing : Managing tricks
+ */
 class TrickControllerTest extends WebTestCase
 {
 
@@ -16,6 +22,8 @@ class TrickControllerTest extends WebTestCase
 
     /**
      * {@inheritDoc}
+     * Working with doctrine repositories
+     * set up a valid connection to DB by through booting the kernel
      */
     protected function setUp()
     {
@@ -26,9 +34,12 @@ class TrickControllerTest extends WebTestCase
             ->getManager();
     }
 
-
+    /**
+     * Testing Home Page Requesting 
+     */
     public function testIndexHomePage()
     {
+        // simulate http authentification in a Functional Test
         $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@admin.com',
             'PHP_AUTH_PW'   => 'pass_1234',
@@ -38,6 +49,9 @@ class TrickControllerTest extends WebTestCase
         $this->assertGreaterThan(0, $crawler->filter('.fa-arrow-down')->count());
     }
 
+   /**
+    * Testing Trick creation page 
+    */
     public function testNewTrick()
     {
         $client = static::createClient([], [
@@ -61,7 +75,6 @@ class TrickControllerTest extends WebTestCase
 
         // TO COMPLETE : Test insertion of new file//
 
-        // $form['trick[imgDocs][7]'] = 'canadian-bacon.jpg';
 
         $crawler = $client->submit($form);
         $this->assertTrue(
@@ -69,6 +82,9 @@ class TrickControllerTest extends WebTestCase
         );
     }
 
+   /**
+    * Testing Trick details page 
+    */
     public function testShowTrick()
     {
       $client = static::createClient();
@@ -87,6 +103,9 @@ class TrickControllerTest extends WebTestCase
 
     }
 
+   /**
+    * Testing Trick edit page 
+    */
     public function testEditTrick(){
 
       $client = static::createClient([], [
@@ -118,8 +137,10 @@ class TrickControllerTest extends WebTestCase
 
     }
 
-
-        public function testDeleteTrick(){
+   /**
+    * Testing Trick delete link 
+    */
+    public function testDeleteTrick(){
 
       $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@admin.com',
@@ -132,7 +153,7 @@ class TrickControllerTest extends WebTestCase
 
       $trick = $tricks[0];
 
-      $crawler = $client->request('DELETE', '/member/'. $trick->getId() .'/delete');
+      $client->request('DELETE', '/member/'. $trick->getId() .'/delete');
 
       $this->assertTrue(
           $client->getResponse()->isRedirect('/')
@@ -140,6 +161,9 @@ class TrickControllerTest extends WebTestCase
 
     }
 
+   /**
+    * Testing Tricks ajax request 
+    */
     public function testTrickAjaxRequest(){
       $client = static::createClient();
       $crawler = $client->xmlHttpRequest('POST', '/ajax/', ['first' => 4]);
@@ -149,6 +173,9 @@ class TrickControllerTest extends WebTestCase
         );
     }
 
+   /**
+    * Testing comments ajax request 
+    */
     public function testCommentAjaxRequest(){
       $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@admin.com',

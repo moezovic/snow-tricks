@@ -92,6 +92,11 @@ class Trick
      */
     private $videoDocs = [];
 
+    /**
+     * @ORM\Column(type="string", length=55)
+     */
+    private $slugName;
+
 
     public function __construct()
     {
@@ -109,16 +114,17 @@ class Trick
         return $this->name;
     }
 
-    public function getSlugName(): ?string
-    {
-      return (new Slugify())->slugify($this->name);
-    }
 
     public function setName(string $name): self
     {
         $this->name = $name;
+        $this->slugName = $this->createSlug($this->name);
 
         return $this;
+    }
+
+    public function getSlugName(){
+      return $this->slugName;
     }
 
     public function getDescription(): ?string
@@ -237,12 +243,11 @@ class Trick
         return current($this->imgDocs);
     }
 
-    public function getRemainingImg(){
+    private function createSlug($str, $delimiter = '-'){
 
-        reset($this->imgDocs); 
-        return array_diff($this->imgDocs, [current($this->imgDocs)]);
+    $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $str))))), $delimiter));
+    return $slug;
 
-    }
-
+}
 
 }

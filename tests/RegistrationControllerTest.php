@@ -4,9 +4,17 @@ namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+
+  /**
+   * Functional testing : Registration
+   */
 class RegistrationControllerTest extends WebTestCase
 {
-
+    /**
+     * Testing registration restrictions
+     * No password given
+     * Asserting Error
+     */
     public function testEmptyPassword()
     {
         $client = static::createClient();
@@ -27,9 +35,11 @@ class RegistrationControllerTest extends WebTestCase
     }
 
     /**
-     * @dataProvider passProvider
+     * Testing registration restrictions
+     * Not respecting password Regex
+     * Asserting Error
      */
-    public function testPasswordRegex($pass)
+    public function testPasswordRegex()
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/register');
@@ -37,24 +47,22 @@ class RegistrationControllerTest extends WebTestCase
 
         $form['user[nickName]'] = 'JoJo';
         $form['user[email]'] = 'jojo@jojo.fr';
-        $form['user[plainPassword][first]'] = $pass;
-        $form['user[plainPassword][second]'] = $pass;
+        $form['user[plainPassword][first]'] = '1234';
+        $form['user[plainPassword][second]'] = '1234';
 
         $crawler = $client->submit($form);
 
         $this->assertEquals(
-          1, $crawler->filter('body:contains("Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule")')->count()
+          1, $crawler->filter('body:contains("Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule.")')->count()
         );
 
     }
 
-    public function passProvider(){
-      return [
-        ['lemotdepassedejojo'],
-        ['jojo1234']
-      ];
-    }
-
+    /**
+     * Testing registration restrictions
+     * Create a valid account
+     * Asserting redirection to login page
+     */
     public function testValidPassword()
     {
       $client = static::createClient();
@@ -74,7 +82,11 @@ class RegistrationControllerTest extends WebTestCase
     }
 
     
-
+    /**
+     * Testing registration restrictions
+     * Use existing mail
+     * Asserting Error
+     */
     public function testUniqueEmail()
     {
       $client = static::createClient();

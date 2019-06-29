@@ -44,7 +44,7 @@ class TrickType extends AbstractType
                'entry_type' => FileType::class,
                'entry_options' => array(
                 'constraints'  => array(
-                  new File(['maxSize' => '20M',
+                  new File(['maxSize' => '4M',
                   "maxSizeMessage" => "Votre video ne doit pas dépasser les 20 Mo.",
                   "mimeTypes" => [" video/x-msvideo", "video/mp4","video/ogg"],
                   "mimeTypesMessage" => "Le document doit avoir une des extensions suivantes : avi, mp4, ogg.",
@@ -68,15 +68,7 @@ class TrickType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Trick::class,
-            // if image input field is empty consider a specefic constraint
-            // 'validation_groups' => function(FormInterface $form){
-            //   $cover = $form->get('cover')->getData();
-            //   if ($cover == null){
-            //     return ['Default'];
-            //   }
 
-            //   return ['Default', 'mandatory'];
-            // }
         ]);
     }
 }

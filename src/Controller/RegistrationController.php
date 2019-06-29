@@ -16,9 +16,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * handle all requests related:
+ *    - user registration
+ *    - password recovery
+ *    - setting up a new password
+ */
 class RegistrationController extends AbstractController
 {
     /**
+     * Action : handle user registration
      * @Route("/register", name="user_registration")
      */
 public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
@@ -47,6 +54,7 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
     }
 
     /**
+     * Action : handle password recovery
      * @Route("/forgotten_pass", name="forgotten_password")
      */
     public function forgottenPassword(Request $request, \Swift_Mailer $mailer){
@@ -105,6 +113,7 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
 
     }
     /**
+     * Action : handle setting up new password
      * @Route("/reset_pass", name="reset_password")
      */
     public function resetPassword(Request $request, UserPasswordEncoderInterface $encoder){

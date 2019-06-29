@@ -23,7 +23,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-
+/**
+ * handle all requests related to trick diplay and management
+ */
 class TrickController extends AbstractController
 {
 
@@ -35,19 +37,23 @@ class TrickController extends AbstractController
 
   }
     /**
+     * Action : get home page
      * @Route("/", name="trick_index", methods={"GET"})
      */
     public function index(TrickRepository $trickRepository): Response
     {
         $tricks = $trickRepository->findAll();
 
+
         return $this->render('trick/index.html.twig', [
           'tricks' => $tricks,
             'fixed_menu'=> 'enabled'
+
         ]);
     }
 
     /**
+     * Action : Create new trick
      * @Route("member/new", name="trick_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
@@ -78,11 +84,14 @@ class TrickController extends AbstractController
 
 
     /**
+     * Action : display a trick details page
      * @Route("/{slug}-{id}", name="trick_show", methods={"GET","POST"}, requirements= {"slug": "[a-z0-9\-]*"})
      */
     public function show(Trick $trick, Request $request, string $slug): Response
     {   
+
         if ($trick->getSlugName() !== $slug) {
+
           return $this->redirectToRoute("trick_show", [
             'id' => $trick->getId(),
             'slug' => $trick->getSlugName()
@@ -118,6 +127,7 @@ class TrickController extends AbstractController
 
 
     /**
+     * Action : Edit a trick
      * @Route("member/{id}/edit", name="trick_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Trick $trick, TemporaryFileManager $temporaryStorage): Response
@@ -144,37 +154,8 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
 
-          // if ($form->get('imgDocs')->getData() == null && isset($storedImages)) {
-
-          //     $trick->setImgDocs($this->uploadedFile->docsInputManager($storedImages));
-
-          // }else{
-
-          //   $imgDocs = $form->get('imgDocs')->getData();
-          //   $uploadedImg = $this->uploadedFile->docsInputManager($imgDocs);
-
-          //   $trick->setImgDocs($uploadedImg);
-
-          // }
-
-
-          // if ($form->get('videoDocs')->getData() == null && isset($storedVideos)) {
-
-          //     $trick->setVideoDocs($this->uploadedFile->docsInputManager($storedVideos));
-
-          // }else{
-
-          //   $videoDocs = $form->get('videoDocs')->getData();
-          //   $uploadedVideos = $this->uploadedFile->docsInputManager($videoDocs);
-
-          //   $trick->setImgDocs($uploadedVideos);
-
-          // }
-
          $trick =  $this->validateEdition($form,$trick,'imgDocs', $storedImages);
          $trick = $this->validateEdition($form,$trick, 'videoDocs', $storedVideos);
-
-
 
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -193,6 +174,7 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Action : delete a trick
      * @Route("member/{id}/delete", name="trick_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Trick $trick): Response
@@ -207,6 +189,7 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Action : ajax request to get or count tricks from the db
      * @Route("/ajax/", name="trick_ajax", methods={"POST"})
      */
     public function ajax(TrickRepository $trickRepository, Request $request){
@@ -230,6 +213,7 @@ class TrickController extends AbstractController
 
 
     /**
+     * Action : Ajax request: Add comments to trick details page
      * @Route("/new_comments/{id}", name="new_comments", methods={"POST"})
      */
     public function newComments(CommentsRepository $commentRepo, Request $request, Trick $trick){
@@ -241,49 +225,22 @@ class TrickController extends AbstractController
             
         ]);
       }
-      else
-      {
+ 
         return $this->render('trick/comments.html.twig', [
 
         'comments' => $commentRepo->findComments($trick->getId()),
         'initial_load' => true
             
         ]);
-      }
 
         
     }
-
+    /**
+     * Action : check if  old files are associated to a trick
+     *          before adding new files
+     */
     private function validateEdition($form,$trick, $identifier, $array){
 
-
-// if ($form->get('imgDocs')->getData() == null && isset($storedImages)) {
-
-          //     $trick->setImgDocs($this->uploadedFile->docsInputManager($storedImages));
-
-          // }else{
-
-          //   $imgDocs = $form->get('imgDocs')->getData();
-          //   $uploadedImg = $this->uploadedFile->docsInputManager($imgDocs);
-
-          //   $trick->setImgDocs($uploadedImg);
-
-          // }
-
-
-          // if ($form->get('videoDocs')->getData() == null && isset($storedVideos)) {
-
-          //     $trick->setVideoDocs($this->uploadedFile->docsInputManager($storedVideos));
-
-          // }else{
-
-          //   $videoDocs = $form->get('videoDocs')->getData();
-          //   $uploadedVideos = $this->uploadedFile->docsInputManager($videoDocs);
-
-          //   $trick->setImgDocs($uploadedVideos);
-
-          // }
-      
 
       if ($form->get($identifier)->getData() == null && isset($array)) {
            $files2Save = $this->uploadedFile->docsInputManager($array);

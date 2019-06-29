@@ -5,7 +5,9 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * 
+ * The main role of this service is to :
+ *  - Temporarily save previously loaded files during trick edition
+ *  - Prevent them being overwritten
  */
 class TemporaryFileManager
 {

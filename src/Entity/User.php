@@ -49,7 +49,7 @@ class User implements UserInterface, \Serializable {
      * )
      * @Assert\Regex(
      *     pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/",
-     *     message="Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule"
+     *     message="Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule."
      * )
      */
     private $plainPassword;

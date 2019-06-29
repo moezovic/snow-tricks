@@ -7,12 +7,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * handle requests user authentification
+ */
 class SecurityController extends AbstractController {
 
     /**
      * @Route("/login", name="login")
      */
-    public function login(Request $request, AuthenticationUtils $authenticationUtils) {
+    public function login(AuthenticationUtils $authenticationUtils) {
         // get the login error if there is one
 
         $error = $authenticationUtils->getLastAuthenticationError();
