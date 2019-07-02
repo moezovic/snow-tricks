@@ -109,6 +109,7 @@ class TrickController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($comment);
             $entityManager->flush();
+
             $comment = new Comment();
             $form = $this->createForm(CommentType::class, $comment);
         }
