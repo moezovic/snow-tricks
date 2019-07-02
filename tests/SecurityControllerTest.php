@@ -23,7 +23,7 @@ class SecurityControllerTest extends WebTestCase
         $form = $crawler->selectButton('Connexion')->form();
 
         $form['_username'] = 'admin@admin.com';
-        $form['_password'] = 'pass_1234';
+        $form['_password'] = 'Pass_1234';
 
         $crawler = $client->submit($form);
         $crawler = $client->followRedirect();

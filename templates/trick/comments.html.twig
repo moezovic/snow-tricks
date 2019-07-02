@@ -3,7 +3,9 @@
     
       {% for comment in comments|slice(0,4) %}
        <div class="alert alert-success">
-         <strong>{{comment.user.nickName}}</strong> à écrit: <strong>{{comment.content}}</strong> 
+        <img src="{{asset('img/'~ comment.user.picture|default('avatar-user.jpg'))}}" class="rounded-circle img-fluid" style="max-width: 40px;">
+         <strong>{{comment.user.nickName}}</strong> à écrit le {{comment.creationDate|date("d-m-Y")}}: <strong>{{comment.content}}</strong> 
+
        </div>
 
       {% endfor %}

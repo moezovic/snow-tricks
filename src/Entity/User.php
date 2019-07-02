@@ -39,17 +39,20 @@ class User implements UserInterface, \Serializable {
 
     /**
      * @Assert\NotBlank(
-     *       message = "La valeur ne peut pas être vide."
+     *       message = "La valeur ne peut pas être vide.",
+     *       groups={"user_type"}
      *)
      * @Assert\Length(
      *      min = 8,
      *      max = 50,
      *      minMessage = "Votre mot de passe doit contenir au moins 8 caractéres",
-     *      maxMessage = "Votre mot de passe doit contenir au moins 50 caractéres"
+     *      maxMessage = "Votre mot de passe doit contenir au moins 50 caractéres",
+     *      groups={"user_type"}
      * )
      * @Assert\Regex(
      *     pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]/",
-     *     message="Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule."
+     *     message="Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule.",
+     *     groups={"user_type"}
      * )
      */
     private $plainPassword;
@@ -80,6 +83,11 @@ class User implements UserInterface, \Serializable {
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $resetToken;
+
+    /**
+     * @ORM\Column(type="array", length=255, nullable=true)
+     */
+    private $picture = [];
 
     /**
      * @return string
@@ -246,6 +254,18 @@ class User implements UserInterface, \Serializable {
     public function setNickName(string $nickName): self
     {
         $this->nickName = $nickName;
+
+        return $this;
+    }
+
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?array $picture)
+    {
+        $this->picture = $picture;
 
         return $this;
     }

@@ -42,7 +42,7 @@ class TrickControllerTest extends WebTestCase
         // simulate http authentification in a Functional Test
         $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@admin.com',
-            'PHP_AUTH_PW'   => 'pass_1234',
+            'PHP_AUTH_PW'   => 'Pass_1234',
         ]);
         $crawler = $client->request('GET', '/');
 
@@ -56,7 +56,7 @@ class TrickControllerTest extends WebTestCase
     {
         $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@admin.com',
-            'PHP_AUTH_PW'   => 'pass_1234',
+            'PHP_AUTH_PW'   => 'Pass_1234',
         ]);
         
         $crawler = $client->request('GET', '/member/new');
@@ -110,7 +110,7 @@ class TrickControllerTest extends WebTestCase
 
       $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@admin.com',
-            'PHP_AUTH_PW'   => 'pass_1234',
+            'PHP_AUTH_PW'   => 'Pass_1234',
         ]);
        $tricks = $this->entityManager
             ->getRepository(Trick::class)
@@ -144,7 +144,7 @@ class TrickControllerTest extends WebTestCase
 
       $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@admin.com',
-            'PHP_AUTH_PW'   => 'pass_1234',
+            'PHP_AUTH_PW'   => 'Pass_1234',
         ]);
        $tricks = $this->entityManager
             ->getRepository(Trick::class)
@@ -179,7 +179,7 @@ class TrickControllerTest extends WebTestCase
     public function testCommentAjaxRequest(){
       $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@admin.com',
-            'PHP_AUTH_PW'   => 'pass_1234',
+            'PHP_AUTH_PW'   => 'Pass_1234',
         ]);
 
       $tricks = $this->entityManager
