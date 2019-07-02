@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * Functional testing : Authentification
  */
 class SecurityControllerTest extends WebTestCase
-{   
+{
 
     /**
      * Testing authentification restrictions
@@ -29,7 +29,8 @@ class SecurityControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
        
         $this->assertEquals(
-          1, $crawler->filter('li:contains("Nouvelle figure")')->count()
+            1,
+            $crawler->filter('li:contains("Nouvelle figure")')->count()
         );
     }
 
@@ -52,7 +53,8 @@ class SecurityControllerTest extends WebTestCase
         $crawler = $client->followRedirect();
        
         $this->assertEquals(
-          1, $crawler->filter('span:contains("Identifiants invalides.")')->count()
+            1,
+            $crawler->filter('span:contains("Identifiants invalides.")')->count()
         );
     }
 }

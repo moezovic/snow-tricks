@@ -39,8 +39,9 @@ class Comment
     private $user;
 
 
-    public function __construct(){
-      $this->creation_date = new \DateTime();
+    public function __construct()
+    {
+        $this->creation_date = new \DateTime();
     }
 
     public function getId(): ?int
@@ -95,5 +96,4 @@ class Comment
 
         return $this;
     }
-
 }

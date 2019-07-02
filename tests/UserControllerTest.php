@@ -35,7 +35,7 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-     * Testing profil Page Requesting 
+     * Testing profil Page Requesting
      */
     public function testProfileDetailsPage()
     {
@@ -49,42 +49,32 @@ class UserControllerTest extends WebTestCase
         $this->assertcontains('Nom d\'utilisateur :', $client->getResponse()->getContent());
     }
 
-   /**
-    * Testing User profile edition
-    */
-    public function testEditUserProfile(){
-
-      $client = static::createClient([], [
+    /**
+     * Testing User profile edition
+     */
+    public function testEditUserProfile()
+    {
+        $client = static::createClient([], [
             'PHP_AUTH_USER' => 'admin@admin.com',
             'PHP_AUTH_PW'   => 'Pass_1234',
         ]);
-       $user = $this->entityManager
+        $user = $this->entityManager
             ->getRepository(User::class)
             ->findOneByEmail('admin@admin.com');
         ;
 
-      $crawler = $client->request('GET', '/member/profile/'. $user->getId());
+        $crawler = $client->request('GET', '/member/profile/'. $user->getId());
 
-      $form = $crawler->selectButton('Valider')->form();
+        $form = $crawler->selectButton('Valider')->form();
 
-      $form['profile[nickName]'] = 'User_007';
-      $form['profile[email]'] = 'admin@admin.com';
-      ;
+        $form['profile[nickName]'] = 'User_007';
+        $form['profile[email]'] = 'admin@admin.com';
+        ;
 
-      $crawler = $client->submit($form);
-      $crawler = $client->followRedirect();
+        $crawler = $client->submit($form);
+        $crawler = $client->followRedirect();
 
 
-      $this->assertcontains('Votre profil a été mis à jour.', $client->getResponse()->getContent());
-
+        $this->assertcontains('Votre profil a été mis à jour.', $client->getResponse()->getContent());
     }
-
 }
-
-
-
-
-
-
-
-

@@ -28,7 +28,8 @@ class RegistrationController extends AbstractController
      * Action : handle user registration
      * @Route("/register", name="user_registration")
      */
-public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder) {
+    public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
         // 1) build the form
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -57,28 +58,26 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
      * Action : handle password recovery
      * @Route("/forgotten_pass", name="forgotten_password")
      */
-    public function forgottenPassword(Request $request, \Swift_Mailer $mailer){
+    public function forgottenPassword(Request $request, \Swift_Mailer $mailer)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $form = $this->createForm(EmailResetType::class);
 
-      $entityManager = $this->getDoctrine()->getManager();
-      $form = $this->createForm(EmailResetType::class);
+        $form->handleRequest($request);
 
-      $form->handleRequest($request);
-
-      if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
 
 
         //$email = $request->request->get('email');
-        $user  = $entityManager->getRepository(User::class)->findOneByEmail($form->getData()['email']);
+            $user  = $entityManager->getRepository(User::class)->findOneByEmail($form->getData()['email']);
 
 
-        if ($user === null) {
-
+            if ($user === null) {
                 $this->addFlash('danger', 'Email Inconnu');
                 return $this->redirectToRoute('trick_index');
-
             }
-        $token = uniqid();
-        try{
+            $token = uniqid();
+            try {
                 $user->setResetToken($token);
                 $entityManager->persist($user);
                 $entityManager->flush();
@@ -89,7 +88,7 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
 
 
 
-             $url = $this->generateUrl('reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+            $url = $this->generateUrl('reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
 
             $message = (new \Swift_Message('Mot de passe oublié'))
@@ -106,47 +105,38 @@ public function registerAction(Request $request, UserPasswordEncoderInterface $p
             $this->addFlash('notice', 'Mail envoyé');
  
             return $this->redirectToRoute('trick_index');
-
-
-      }
-      return $this->render('security/forgotten_password.html.twig', array('form' => $form->createView(), 'title' => 'Recupérer mot de passe'));
-
+        }
+        return $this->render('security/forgotten_password.html.twig', array('form' => $form->createView(), 'title' => 'Recupérer mot de passe'));
     }
     /**
      * Action : handle setting up new password
      * @Route("/reset_pass", name="reset_password")
      */
-    public function resetPassword(Request $request, UserPasswordEncoderInterface $encoder){
-
-
-      $token = $request->query->get('token');
-      if($token !== null){
-         $entityManager = $this->getDoctrine()->getManager();
-         $user = $entityManager->getRepository(User::class)->findOneByResetToken($token);
-         if($user !== null){
-           $form = $this->createForm(ResetPasswordType::class, $user);
-           $form->handleRequest($request);
+    public function resetPassword(Request $request, UserPasswordEncoderInterface $encoder)
+    {
+        $token = $request->query->get('token');
+        if ($token !== null) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $user = $entityManager->getRepository(User::class)->findOneByResetToken($token);
+            if ($user !== null) {
+                $form = $this->createForm(ResetPasswordType::class, $user);
+                $form->handleRequest($request);
       
-           if($form->isSubmitted() && $form->isValid()){
-           $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
-           $user->setPassword($encoded);
-           $entityManager->persist($user);
-           $entityManager->flush();
+                if ($form->isSubmitted() && $form->isValid()) {
+                    $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
+                    $user->setPassword($encoded);
+                    $entityManager->persist($user);
+                    $entityManager->flush();
            
-           $this->addFlash('notice', 'Mot de passe mis à jour');
-           return $this->redirectToRoute('login');
-           }
+                    $this->addFlash('notice', 'Mot de passe mis à jour');
+                    return $this->redirectToRoute('login');
+                }
            
-           return $this->render('security/reset_password.html.twig', array('form' => $form->createView()));
-      
-         }
-      }
+                return $this->render('security/reset_password.html.twig', array('form' => $form->createView()));
+            }
+        }
 
-         $this->addFlash('danger', 'Token Inconnu');
-         return $this->redirectToRoute('trick_index');
-              
+        $this->addFlash('danger', 'Token Inconnu');
+        return $this->redirectToRoute('trick_index');
     }
 }
-
-
-

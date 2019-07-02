@@ -4,8 +4,7 @@ namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-
-  /**
+/**
    * Functional testing : Registration
    */
 class RegistrationControllerTest extends WebTestCase
@@ -29,9 +28,9 @@ class RegistrationControllerTest extends WebTestCase
         $crawler = $client->submit($form);
 
         $this->assertEquals(
-          1, $crawler->filter('body:contains("La valeur ne peut pas être vide")')->count()
+            1,
+            $crawler->filter('body:contains("La valeur ne peut pas être vide")')->count()
         );
-
     }
 
     /**
@@ -53,9 +52,9 @@ class RegistrationControllerTest extends WebTestCase
         $crawler = $client->submit($form);
 
         $this->assertEquals(
-          1, $crawler->filter('body:contains("Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule.")')->count()
+            1,
+            $crawler->filter('body:contains("Votre mot de passe doit contenir: un chiffre, un majuscule, un minuscule.")')->count()
         );
-
     }
 
     /**
@@ -65,18 +64,18 @@ class RegistrationControllerTest extends WebTestCase
      */
     public function testValidPassword()
     {
-      $client = static::createClient();
-      $crawler = $client->request('GET', '/register');
-      $form = $crawler->selectButton('Envoyer')->form();
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/register');
+        $form = $crawler->selectButton('Envoyer')->form();
 
-      $form['user[nickName]'] = 'JoJo';
-      $form['user[email]'] = 'jojo@jojo.fr';
-      $form['user[plainPassword][first]'] = 'JoJo1234';
-      $form['user[plainPassword][second]'] = 'JoJo1234';
+        $form['user[nickName]'] = 'JoJo';
+        $form['user[email]'] = 'jojo@jojo.fr';
+        $form['user[plainPassword][first]'] = 'JoJo1234';
+        $form['user[plainPassword][second]'] = 'JoJo1234';
 
-      $crawler = $client->submit($form);
+        $crawler = $client->submit($form);
 
-      $this->assertTrue(
+        $this->assertTrue(
           $client->getResponse()->isRedirect('/login')
         );
     }
@@ -89,20 +88,20 @@ class RegistrationControllerTest extends WebTestCase
      */
     public function testUniqueEmail()
     {
-      $client = static::createClient();
-      $crawler = $client->request('GET', '/register');
-      $form = $crawler->selectButton('Envoyer')->form();
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/register');
+        $form = $crawler->selectButton('Envoyer')->form();
 
-      $form['user[nickName]'] = 'admin';
-      $form['user[email]'] = 'admin@admin.com';
-      $form['user[plainPassword][first]'] = 'Admin1234';
-      $form['user[plainPassword][second]'] = 'Admin1234';
+        $form['user[nickName]'] = 'admin';
+        $form['user[email]'] = 'admin@admin.com';
+        $form['user[plainPassword][first]'] = 'Admin1234';
+        $form['user[plainPassword][second]'] = 'Admin1234';
 
-      $crawler = $client->submit($form);
+        $crawler = $client->submit($form);
 
-      $this->assertEquals(
-          1, $crawler->filter('body:contains("Cet Email est deja utilisé")')->count()
+        $this->assertEquals(
+          1,
+          $crawler->filter('body:contains("Cet Email est deja utilisé")')->count()
         );
     }
-
 }

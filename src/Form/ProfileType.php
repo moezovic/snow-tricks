@@ -14,7 +14,8 @@ use Symfony\Component\Validator\Constraints\File;
 
 class ProfileType extends AbstractType
 {
-     public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
                 ->add('nickName', TextType::class, array(
                   'label' => 'Nom d\'utilisateur',
@@ -47,12 +48,9 @@ class ProfileType extends AbstractType
             ])
             // ...
         ;
-
-                
-        
     }
 
-      public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => User::class,
@@ -60,5 +58,4 @@ class ProfileType extends AbstractType
 
         ]);
     }
-
 }
