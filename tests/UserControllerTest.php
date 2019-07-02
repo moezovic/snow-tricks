@@ -44,7 +44,7 @@ class UserControllerTest extends WebTestCase
             'PHP_AUTH_USER' => 'admin@admin.com',
             'PHP_AUTH_PW'   => 'Pass_1234',
         ]);
-        $crawler = $client->request('GET', '/member/profile-details');
+        $client->request('GET', '/member/profile-details');
 
         $this->assertcontains('Nom d\'utilisateur :', $client->getResponse()->getContent());
     }

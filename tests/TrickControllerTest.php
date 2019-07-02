@@ -193,7 +193,7 @@ class TrickControllerTest extends WebTestCase
       $crawler = $client->xmlHttpRequest('POST', '/new_comments/'.$trick->getId());
       
       $this->assertGreaterThan(
-          0, $crawler->filter('html:contains("à écrit:")')->count()
+          0, $crawler->filter('html:contains("à écrit le")')->count()
         );
 
     }
