@@ -14,7 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UserType extends AbstractType
 {
-     public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
                 ->add('nickName', TextType::class, array(
                   'error_bubbling' => true
@@ -32,4 +33,12 @@ class UserType extends AbstractType
         ;
     }
 
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => User::class,
+            'validation_groups' => ['Default', 'user_type'],
+
+        ]);
+    }
 }

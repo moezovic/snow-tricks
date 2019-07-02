@@ -20,7 +20,7 @@ class TrickType extends AbstractType
             ->add('name')
             ->add('description')
             ->add('niveau', ChoiceType::class, ['choices'=>array_flip(Trick::NIVEAU), 'label' => 'Niveau de difficulté'])
-            ->add('trick_group' , ChoiceType::class, ['choices'=>array_flip(Trick::TRICK_GROUP), 'label' => 'Type de figure'])
+            ->add('trick_group', ChoiceType::class, ['choices'=>array_flip(Trick::TRICK_GROUP), 'label' => 'Type de figure'])
             ->add('imgDocs', CollectionType::class, [
                'entry_type' => FileType::class,
                'entry_options' => array(

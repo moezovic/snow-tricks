@@ -6,7 +6,6 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\File\File;
 
-
 /**
  * The main role of this service is to handle file loading:
  *  - generate new file names
@@ -14,11 +13,11 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 class UploadedFileManager
 {
-  private $rootDirectory;
+    private $rootDirectory;
 
-  public function __construct($rootDirectory)
+    public function __construct($rootDirectory)
     {
-      $this->rootDirectory = $rootDirectory;
+        $this->rootDirectory = $rootDirectory;
     }
   
     /**
@@ -35,30 +34,26 @@ class UploadedFileManager
      * generate unique names for docs and manage their storage
      * @return array
      */
-    public function docsInputManager($docs){
+    public function docsInputManager($docs)
+    {
+        $arrayOfDocs=[];
 
-      $arrayOfDocs=[];
-
-      if (!empty($docs)) {
-
-         foreach ($docs as $file) {
-
-            $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
-            $arrayOfDocs[] = $fileName;
-            // Move the file to the directory where images are stored
-              try {
-                  $file->move(
+        if (!empty($docs)) {
+            foreach ($docs as $file) {
+                $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+                $arrayOfDocs[] = $fileName;
+                // Move the file to the directory where images are stored
+                try {
+                    $file->move(
                       $this->rootDirectory. '/public/uploads/images',
                       $fileName
                   );
-              } catch (FileException $e) {
-                  // ... handle exception if something happens during file upload
-              }
-
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
             }
-      }
+        }
 
-      return $arrayOfDocs;
-
+        return $arrayOfDocs;
     }
 }

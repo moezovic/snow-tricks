@@ -15,7 +15,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Trick
 {
-
     const NIVEAU = [
       0 => "",
       1 => "Facile",
@@ -66,7 +65,7 @@ class Trick
      *      max = 4,
      *      minMessage = "Veuillez choisir un niveau de difficulté valide.",
      *      maxMessage = "Veuillez choisir un niveau de difficulté valide.",
-     *      
+     *
      * )
      */
     private $niveau;
@@ -123,8 +122,9 @@ class Trick
         return $this;
     }
 
-    public function getSlugName(){
-      return $this->slugName;
+    public function getSlugName()
+    {
+        return $this->slugName;
     }
 
     public function getDescription(): ?string
@@ -213,7 +213,7 @@ class Trick
     }
 
     public function setImgDocs(?array $attachements): self
-    {   
+    {
         $this->imgDocs = $attachements;
   
         return $this;
@@ -238,16 +238,14 @@ class Trick
     }
 
     public function getFirstImg()
-    {   
+    {
         reset($this->imgDocs);
         return current($this->imgDocs);
     }
 
-    private function createSlug($str, $delimiter = '-'){
-
-    $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $str))))), $delimiter));
-    return $slug;
-
-}
-
+    private function createSlug($str, $delimiter = '-')
+    {
+        $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $str))))), $delimiter));
+        return $slug;
+    }
 }

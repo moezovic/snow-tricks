@@ -15,37 +15,7 @@
 		  <link href="{{asset('css/style.min.css')}}" rel="stylesheet">
       <link href="{{asset('css/mainstyle.css')}}" rel="stylesheet">
 		  {% block stylesheets %}{% endblock %}
-		  <style type="text/css">
-		    html,
-		    body,
-		    header,
-		    .view {
-		      height: 100%;
-		    }
 
-		    @media (max-width: 740px) {
-		      html,
-		      body,
-		      header,
-		      .view {
-		        height: 1000px;
-		      }
-		    }
-
-		    @media (min-width: 800px) and (max-width: 850px) {
-		      html,
-		      body,
-		      header,
-		      .view {
-		        height: 650px;
-		      }
-		    }
-		    @media (min-width: 800px) and (max-width: 850px) {
-		              .navbar:not(.top-nav-collapse) {
-		                  background: #1C2331!important;
-		              }
-		          }
-		  </style>
 		</head>
 
     <body>
@@ -76,6 +46,9 @@
 
           <li class="nav-item">
             <a class="nav-link" href="{{path('trick_new')}}">Nouvelle figure</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{path('profil_show')}}">Mon profil</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{path('logout')}}">Deconnexion</a>
