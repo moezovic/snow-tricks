@@ -3,6 +3,8 @@
 SnowTricks is a website built for Snowboard passionates.
 Visiitors can discover tricks and users interactions and they can also have private acces to contribute by creating a member account.
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c01632f854234b8ab04afdc57544dd32)](https://www.codacy.com/app/moezovic/snow-tricks?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=moezovic/snow-tricks&amp;utm_campaign=Badge_Grade)
+
 ## Built with
 
 This project was built with :
