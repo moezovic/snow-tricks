@@ -53,3 +53,9 @@ git clone https://github.com/moezovic/snow-tricks.git
 ```
 php bin/console doctrine:fixtures:load
 ```
+
+Problèmes rencontrés avec le groupe 2 :
+
+Certaines personnes avaient les migrations qui ne marchaient pas, elles les ont supprimées et relancer.
+
+Le composer install n'a pas marché pour certains, ils ont fait composer update juste après
